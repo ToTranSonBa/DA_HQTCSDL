@@ -1,0 +1,17 @@
+RBTV
+
+1.	Số lượng đơn hàng phải lớn hơn 0
+2.	Phí hoa hồng bằng 10% doanh số
+3.	Doanh số bằng tổng tiền các đơn hang
+4.	Đối tác có thể cập nhật tên của hang trong vòng 30 ngày kể từ ngày đăng ký 
+ 
+5.	Tên món tối đa 80 ký tự
+6.	Ngày tạo HOSODANGKY phải từ 3-5 ngày so với ngày lập trong HODONG
+7.	Hợp đồng hết hạn sau 1 năm, phải gia hạn hợp đồng trước ngày hết hạn và tái cập nhât thời gian hiệu lực và hoa hồng
+8.	Tiền mỗi đơn hơn được chuyển vào số tài khoản của đối tác trong 1-3 ngày sau khi trừ phí hoa hồng 20% trên tổng giá trị đơn hang
+9.	Phải cung cấp đầy đủ các thông tin: họ tên, số điện thoại, địa chỉ, email.
+10.	Khi khách hàng xác nhận đồng ý, đơn hàng sẽ không được cập nhật gì khác và được chuyển đến đối tác.
+11.	Khách hàng chỉ được huỷ đơn khi đơn hàng ở tình trạng chờ nhận, nếu đơn hàng ở tình trạng đã tiếp nhận/xử lý thì không được phép huỷ đơn.
+12.	Tài xế cần cung cấp thông tin gồm: họ tên, cmnd, điện thoại, địa chỉ, biển số xe, khu vực hoạt động, email, thông tin tài khoản ngân hàng để nhận tiền.
+13.	 Khi đăng ký thành viên, tài xế cần nộp một khoản phí thuế chân.
+14.	
