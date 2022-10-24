@@ -37,36 +37,19 @@ begin
 END
 
 --ngày nộp phí hoa hồng phải lớn hơn ngày lập hợp đồng
---create trigger tg_checkNgayNopPHH
---on PHIHOAHONG
---for insert ,update
---as
---begin 
---	if exists (select *
---				from inserted i, HOPDONG hd,HOSODANGKY hsdk,DONHANG
---				where hd.HD_MA = hsdk.HD_MA and hsdk.HSDK_NGUOIDAIDIEN = dt.DT_MA
---				and dt.DT_MA =i.DT_MA and i.PHH_NGAYNOP < hd.HD_NGAYLAP)
---	begin
---		raiserror(N'ngày nộp phí hoa hồng phải lớn hơn ngày ngày lập hợp đồng',16,1)
---		rollback
---	end
---end
-
---ngày sinh của đối tác phải nhỏ hơn ngày lập hợp đồng
---create trigger tg_checkNamSinhDoiTac
---on DOITAC
---for insert,update
---as
---begin
---	if exists (select *
---				from inserted i ,HOPDONG hd, HOSODANGKY hsdk
---				where hd.HD_MA =hsdk.HD_MA and hsdk.HSDK_NGUOIDAIDIEN = i.DT_MA
---				and i.DT_NGAYSINH >hd.HD_NGAYLAP)
---	begin
---		raiserror(N'ngày sinh của đối tác nhập sai',16,1)
---		rollback
---	end
---end
+create trigger tg_checkNgayNopPHH
+on PHIHOAHONG
+for insert ,update
+as
+begin 
+	if exists (select *
+				from inserted i, HOPDONG hd,NHANVIEN nv
+				where hd.NV_MA = nv.NV_MA and nv.NV_MA = i.NV_MA and i.PHH_NGAYNOP < hd.HD_NGAYLAP)
+	begin
+		raiserror(N'ngày nộp phí hoa hồng phải lớn hơn ngày ngày lập hợp đồng',16,1)
+		rollback
+	end
+end
 
 --ngày sinh của nhân viên phải nhỏ hơn ngày lập hợp đồng
 create trigger tg_checkNamSinhNhanVien
@@ -217,9 +200,8 @@ for insert,update
 as
 begin
 	if exists (select *
-				from inserted i ,KHACHHANG kh ,DONHANG dh 
-				where kh.KH_MA = dh.KH_MA and i.KH_MA = kh.KH_MA
-				and dh.DH_TONGTIEN <= i.DH_PHIVANCHUYEN)
+				from inserted i 
+				where i.DH_TONGTIEN <= i.DH_PHIVANCHUYEN)
 	begin
 		raiserror(N'phí vận chuyển không được lớn hơn tổng tiền của đơn hàng',16,1)
 		rollback
@@ -250,14 +232,73 @@ BEGIN
 END
 GO
 
-CREATE 
---ALTER
-TRIGGER TR_DKTAIXE
-ON TAIXE
-FOR INSERT, UPDATE
-AS
-BEGIN 
-	SELECT * FROM inserted I
-	
+--giới tính của tài xế phải là Nam hoặc Nữ
+alter table TAIXE add constraint check_PhaiTaiXe check(TX_GIOITINH = N'Nam' or TX_GIOITINH = N'Nữ')
 
-END
+--giới tính của Khách hàng phải là Nam hoặc Nữ
+alter table KHACHHANG add constraint check_PhaiKhachHang check(KH_GIOITINH = N'Nam' or KH_GIOITINH = N'Nữ')
+
+--phí hoa hồng bằng 10% doanh thu
+create trigger tg_PhiHoaHong
+on PHIHOAHONG
+for insert,update
+as
+if update(PHH_TONGTIEN)
+begin
+	
+	update PHIHOAHONG
+	set PHH_TONGTIEN = (select sum(dh.DH_TONGTIEN)*0,1
+						from DONHANG dh
+						where PHIHOAHONG.DH_MA = dh.DH_MA and PHIHOAHONG.PHH_PHITHANG = month(dh.DH_NGAYDAT))	
+	where exists (select* 
+					from inserted i
+					where i.DH_MA = PHIHOAHONG.DH_MA and i.NV_MA = PHIHOAHONG.NV_MA)
+end
+
+--giá tiền trong chi tiết đơn hàng phải bằng giá tiền của món ăn
+create trigger tg_GiaTienChiTietDonHang
+on CHITIETDONHANG
+for insert, update
+as
+begin
+	update CHITIETDONHANG
+	set CTDH_GIATIEN = (select ma.MAN_GIA
+						from MONAN ma
+						where ma.MAN_MA = CHITIETDONHANG.MAN_MA)
+	where exists (select * 
+					from inserted i
+					where i.DH_MA = CHITIETDONHANG.DH_MA and i.MAN_MA = CHITIETDONHANG.MAN_MA)
+end
+
+
+--tổng tiền của một đơn hàng bằng tổng giá tất cả các món trong chi tiết  đơn hàng
+create trigger tg_TongTienDonHang
+on DONHANG
+for insert ,update
+as
+begin
+
+	update DONHANG
+	set DH_TONGTIEN =  (select sum(ctdh.CTDH_SOLUONG*ctdh.CTDH_GIATIEN)
+						from CHITIETDONHANG ctdh
+						where ctdh.DH_MA = DONHANG.DH_MA)
+	where exists (select *
+					from inserted i
+					where i.DH_MA = i.DH_MA)
+end
+
+--tổng tiền của 1 đơn hàng trừ đi 20% hoa hồng
+create trigger tg_TongTienSauCungCuaDonHang
+on DONHANG
+for insert,update
+as
+begin
+	update DONHANG
+	set DH_TONGTIEN =DH_TONGTIEN *0.8
+	where exists (select *
+					from inserted i
+					where DONHANG.DH_MA = i.DH_MA)
+end
+
+--thời gian mở của của một của hàng phải sớm hơn thời gian đóng cửa
+alter table CUAHANG add constraint check_ThoiGianDongMoCuaHang check(CH_TGMOCUA <CH_TGDONGCUA)
