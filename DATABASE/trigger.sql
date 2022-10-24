@@ -1,16 +1,19 @@
 ﻿DATABASE DOAN_HQTCSDL
 GO
+
+use DOAN_HQTCSDL 
+go
 ---	RÀNG BUỘC TOÀN VẸN
 
---Số cmnd phải là duy nhất cho đối tác
+--Số cmnd phải là duy nhất cho TAI XE
 CREATE TRIGGER tg_checkCMNDDoiTac
-ON DOITAC
+ON TAIXE
 FOR INSERT ,UPDATE
 AS
 BEGIN
 	IF EXISTS (SELECT *
-				FROM INSERTED I ,DOITAC DT
-				WHERE  I.DT_CMND = DT.DT_CMND AND I.DT_MA !=DT.DT_MA )
+				FROM INSERTED I ,TAIXE TX
+				WHERE  I.TX_CMND = TX.TX_CMND AND I.TX_MA !=TX.TX_MA)
 	BEGIN
 		RAISERROR(N'Số chứng minh nhân dân nhập sai',16,1)
 		ROLLBACK
@@ -34,36 +37,36 @@ begin
 END
 
 --ngày nộp phí hoa hồng phải lớn hơn ngày lập hợp đồng
-create trigger tg_checkNgayNopPHH
-on PHIHOAHONG
-for insert ,update
-as
-begin 
-	if exists (select *
-				from inserted i, HOPDONG hd,HOSODANGKY hsdk,DOITAC dt
-				where hd.HD_MA = hsdk.HD_MA and hsdk.HSDK_NGUOIDAIDIEN = dt.DT_MA
-				and dt.DT_MA =i.DT_MA and i.PHH_NGAYNOP < hd.HD_NGAYLAP)
-	begin
-		raiserror(N'ngày nộp phí hoa hồng phải lớn hơn ngày ngày lập hợp đồng',16,1)
-		rollback
-	end
-end
+--create trigger tg_checkNgayNopPHH
+--on PHIHOAHONG
+--for insert ,update
+--as
+--begin 
+--	if exists (select *
+--				from inserted i, HOPDONG hd,HOSODANGKY hsdk,DONHANG
+--				where hd.HD_MA = hsdk.HD_MA and hsdk.HSDK_NGUOIDAIDIEN = dt.DT_MA
+--				and dt.DT_MA =i.DT_MA and i.PHH_NGAYNOP < hd.HD_NGAYLAP)
+--	begin
+--		raiserror(N'ngày nộp phí hoa hồng phải lớn hơn ngày ngày lập hợp đồng',16,1)
+--		rollback
+--	end
+--end
 
 --ngày sinh của đối tác phải nhỏ hơn ngày lập hợp đồng
-create trigger tg_checkNamSinhDoiTac
-on DOITAC
-for insert,update
-as
-begin
-	if exists (select *
-				from inserted i ,HOPDONG hd, HOSODANGKY hsdk
-				where hd.HD_MA =hsdk.HD_MA and hsdk.HSDK_NGUOIDAIDIEN = i.DT_MA
-				and i.DT_NGAYSINH >hd.HD_NGAYLAP)
-	begin
-		raiserror(N'ngày sinh của đối tác nhập sai',16,1)
-		rollback
-	end
-end
+--create trigger tg_checkNamSinhDoiTac
+--on DOITAC
+--for insert,update
+--as
+--begin
+--	if exists (select *
+--				from inserted i ,HOPDONG hd, HOSODANGKY hsdk
+--				where hd.HD_MA =hsdk.HD_MA and hsdk.HSDK_NGUOIDAIDIEN = i.DT_MA
+--				and i.DT_NGAYSINH >hd.HD_NGAYLAP)
+--	begin
+--		raiserror(N'ngày sinh của đối tác nhập sai',16,1)
+--		rollback
+--	end
+--end
 
 --ngày sinh của nhân viên phải nhỏ hơn ngày lập hợp đồng
 create trigger tg_checkNamSinhNhanVien
@@ -73,7 +76,7 @@ as
 begin
 	if exists (select *
 				from inserted i ,HOPDONG hd, HOSODANGKY hsdk
-				where hd.HD_MA =hsdk.HD_MA and hsdk.HSDK_NVDK = i.NV_MA
+				where hd.HD_MA =hsdk.HD_MA and hsdk.NV_MA = i.NV_MA
 				and i.NV_NGAYSINH > hd.HD_NGAYLAP)
 	begin
 		raiserror(N'ngày sinh của nhân viên nhập sai',16,1)
@@ -209,18 +212,52 @@ check(DH_PHUONGTHUCTHANHTOAN = N'Thanh toán online' or DH_PHUONGTHUCTHANHTOAN =
 
 --phí vận chuyển phải nhỏ hơn tổng tiền của đơn hàng
 create trigger tg_checkPhiVanChuyen
-on TINHTRANGGIAOHANG
+on DONHANG
 for insert,update
 as
 begin
 	if exists (select *
 				from inserted i ,KHACHHANG kh ,DONHANG dh 
 				where kh.KH_MA = dh.KH_MA and i.KH_MA = kh.KH_MA
-				and dh.DH_TONGTIEN <= i.TTGH_PHIVANCHUYEN)
+				and dh.DH_TONGTIEN <= i.DH_PHIVANCHUYEN)
 	begin
 		raiserror(N'phí vận chuyển không được lớn hơn tổng tiền của đơn hàng',16,1)
 		rollback
 	end
 end
 
+-- Tên món tối đa 80 ký tự
+alter table MONAN
+ADD CONSTRAINT CHECK_TENMONAN
+CHECK(LEN(MAN_TEN) < 80)
+GO
+-- Khách hang chỉ được đặt món ăn trong thực đơn
+CREATE 
+--ALTER
+TRIGGER TR_DATHANG
+ON CHITIETDONHANG
+FOR INSERT, UPDATE
+AS
+BEGIN 
+	IF NOT EXISTS (SELECT * FROM inserted I, MONAN MAN
+					WHERE I.CH_MA= MAN.CH_MA AND I.CN_MA = MAN.CN_MA AND I.TD_MA = MAN.TD_MA
+					AND I.MAN_MA = MAN.MAN_MA)
+	BEGIN 
+		raiserror(N'MON AN KHONG CO TRONG THUC DON',16,1)
+		rollback
+	END
 
+END
+GO
+
+CREATE 
+--ALTER
+TRIGGER TR_DKTAIXE
+ON TAIXE
+FOR INSERT, UPDATE
+AS
+BEGIN 
+	SELECT * FROM inserted I
+	
+
+END
