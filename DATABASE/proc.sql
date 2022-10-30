@@ -41,7 +41,7 @@ begin tran
 						from DIACHI dc
 						where dc.DC_MATINH = @dc_matinh)
 		begin 
-			print N'mã tỉnh ' + @dc_mahuyen + N' không tồn tại'
+			print N'mã tỉnh ' + @dc_matinh + N' không tồn tại'
 			rollback tran
 		end
 
@@ -57,7 +57,7 @@ begin tran
 						from DIACHI dc
 						where dc.DC_MAXA = @dc_maxa)
 		begin 
-			print N'mã xã ' + @dc_mahuyen + N' không tồn tại'
+			print N'mã xã ' + @dc_maxa + N' không tồn tại'
 			rollback tran
 		end
 		
@@ -97,7 +97,7 @@ begin tran
 						from DIACHI dc
 						where dc.DC_MATINH = @dc_matinh)
 		begin 
-			print N'mã tỉnh ' + @dc_mahuyen + N' không tồn tại'
+			print N'mã tỉnh ' + @dc_matinh + N' không tồn tại'
 			rollback tran
 		end
 
@@ -113,7 +113,7 @@ begin tran
 						from DIACHI dc
 						where dc.DC_MAXA = @dc_maxa)
 		begin 
-			print N'mã xã ' + @dc_mahuyen + N' không tồn tại'
+			print N'mã xã ' + @dc_maxa + N' không tồn tại'
 			rollback tran
 		end
 		
@@ -238,7 +238,7 @@ begin tran
 						from DIACHI dc
 						where dc.DC_MATINH = @dc_matinh)
 		begin 
-			print N'mã tỉnh ' + @dc_mahuyen + N' không tồn tại'
+			print N'mã tỉnh ' + @dc_matinh + N' không tồn tại'
 			rollback tran
 		end
 
@@ -254,7 +254,7 @@ begin tran
 						from DIACHI dc
 						where dc.DC_MAXA = @dc_maxa)
 		begin 
-			print N'mã xã ' + @dc_mahuyen + N' không tồn tại'
+			print N'mã xã ' + @dc_maxa + N' không tồn tại'
 			rollback tran
 		end
 
