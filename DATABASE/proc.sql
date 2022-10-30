@@ -570,7 +570,7 @@ begin transaction
 	end
 	if not exists(select * from TAIXE where TX_MA=@ma)
 	begin
-		print N'Mã tài xế ' +@makh + N' không tồn tại'
+		print N'Mã tài xế ' +@ma + N' không tồn tại'
 		rollback transaction
 		return
 	end
@@ -684,7 +684,7 @@ begin transaction
 	end
 	if not exists(select * from TAIXE where TX_MA=@ma_tx)
 	begin
-		print N'Mã tài xế ' + @ma + N' không tồn tại'
+		print N'Mã tài xế ' + @ma_tx + N' không tồn tại'
 		rollback transaction
 		return
 	end
@@ -707,7 +707,7 @@ begin transaction
 	end
 	if not exists(select * from TAIXE where TX_MA=@ma_tx)
 	begin
-		print N'Mã tài xế ' + @ma + N' không tồn tại'
+		print N'Mã tài xế ' + @ma_tx + N' không tồn tại'
 		rollback transaction
 		return
 	end
@@ -717,7 +717,7 @@ commit transaction
 go
 --Tổng tiền đơn đã giao
 create proc sp_tongtien
-@ma char(10),
+@ma_tx char(10),
 @sum_money int out
 as
 begin transaction
@@ -727,14 +727,14 @@ begin transaction
 		rollback transaction
 		return
 	end
-	if not exists(select * from TAIXE where TX_MA=@ma)
+	if not exists(select * from TAIXE where TX_MA=@ma_tx)
 	begin
-		print N'Mã tài xế ' + @ma + N' không tồn tại'
+		print N'Mã tài xế ' + @ma_tx + N' không tồn tại'
 		rollback transaction
 		return
 	end
 	--Select
-	select @sum_money=sum(DH_TONGTIEN) from TINHTRANGGIAOHANG left join DONHANG on TINHTRANGGIAOHANG.DH_MA=DONHANG.DH_MA where TINHTRANGGIAOHANG.TX_MA=@ma and TINHTRANGGIAOHANG.TTGH_TINHTRANG=N'Đã nhận đơn hàng'
+	select @sum_money=sum(DH_TONGTIEN) from TINHTRANGGIAOHANG left join DONHANG on TINHTRANGGIAOHANG.DH_MA=DONHANG.DH_MA where TINHTRANGGIAOHANG.TX_MA=@ma_tx and TINHTRANGGIAOHANG.TTGH_TINHTRANG=N'Đã nhận đơn hàng'
 commit transaction
 go
 
