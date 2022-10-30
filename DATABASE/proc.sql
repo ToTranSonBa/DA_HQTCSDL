@@ -106,7 +106,7 @@ begin tran
 		rollback tran
 	end catch
 commit tran
-
+go
 --cập nhật thông tin cho khách hàng
 create proc sp_CapNhatThongTinKhachHang
 	@makh char(10),
