@@ -153,7 +153,7 @@ check (HD_TINHTRANG = N'Hiệu lực' or HD_TINHTRANG = N'Hết hiệu lực')
 
 --tình trạng đơn đạt hàng phải là đang xác thực hoặc chưa xác thực
 alter table DONHANG add constraint check_TinhTrangDonHang
-check (DH_TINHTRANG = N'Đang xác thực' or DH_TINHTRANG = N'Chưa xác thực')
+check (DH_TINHTRANG = N'Đã xác thực' or DH_TINHTRANG = N'Chưa xác thực')
 
 --tình trạng các món ăn phải là có bán ,hết hàng hôm nay ,tạm ngừng, ngừng bán
 alter table MONAN add constraint check_TinhTrangMonAn
