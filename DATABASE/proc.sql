@@ -10,13 +10,29 @@ on KHACHHANG
 to KhachHang
 go
 
-grant  insert,Update
+grant  insert,delete
 on DONHANG
 to KhachHang
 go
 
-grant insert ,Update
+grant insert 
 on CHITIETDONHANG
+to KhachHang
+
+grant select
+on DOITAC
+to KhachHang
+
+grant select
+on THUCDON
+to KhachHang
+
+grant select
+on MONAN
+to KhachHang
+
+grant select
+on TINHTRANGDONHANG
 to KhachHang
 
 --thêm thông tin cho khách hàng mới
