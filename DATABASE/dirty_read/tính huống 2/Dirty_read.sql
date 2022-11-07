@@ -64,8 +64,8 @@ begin tran
 		end
 		-- chen
 		insert into MONAN
-		values (@man_gia, @td_ma, @cn_ma, @ch_ma, @man_ten, @man_mieuta, @man_tinhtrang, @man_gia)
-		waitfor delay '00:00:10'
+		values (@man_ma, @td_ma, @cn_ma, @ch_ma, @man_ten, @man_mieuta, @man_tinhtrang, @man_gia)
+		waitfor delay '00:00:20'
 	end try
 	begin catch
 			raiserror('khong them duoc mon an', 16, 1)
