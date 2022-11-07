@@ -39,7 +39,7 @@ begin tran
 		delete from MONAN
 		where MAN_MA = @man_ma and CH_MA = @ch_ma
 		and TD_MA = @td_ma and CN_MA = @cn_ma 
-		waitfor delay '00:00:10'
+		waitfor delay '00:00:20'
 	end try
 	begin catch
 		raiserror('khong cap nhat duoc mon an', 16, 1)
