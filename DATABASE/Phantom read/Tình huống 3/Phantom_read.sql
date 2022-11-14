@@ -14,6 +14,8 @@ create proc sp_themthongtintaixe
 @ma_huyen char(10),
 @ma_xa char(10)
 as
+SET TRANSACTION ISOLATION 
+LEVEL SERIALIZABLE
 begin transaction
 	if(@sdt = NULL or @ten = NULL or @cmnd = NULL or @bien_so_xe = NULL)
 	begin
@@ -63,6 +65,8 @@ create proc sp_themthongtintaixe
 @ma_huyen char(10),
 @ma_xa char(10)
 as
+SET TRANSACTION ISOLATION 
+LEVEL SERIALIZABLE
 begin transaction
 	if(@sdt = NULL or @ten = NULL or @cmnd = NULL or @bien_so_xe = NULL)
 	begin
