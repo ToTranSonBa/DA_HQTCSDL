@@ -5,6 +5,8 @@ create proc sp_DanSachMonAnKhachHangTimKiem
 	@makh char(10),
 	@tenmonan nvarchar(10)
 as
+SET TRANSACTION ISOLATION 
+LEVEL SERIALIZABLE
 begin tran
 	begin try
 		if not exists (select * from KHACHHANG kh where kh.KH_MA = @makh)
@@ -44,6 +46,8 @@ proc pr_capnhatmonan
 	@man_tinhtrang nvarchar(50),
 	@man_gia money
 as
+SET TRANSACTION ISOLATION 
+LEVEL SERIALIZABLE
 begin tran
 	begin try
 		if(@man_ma is null)
