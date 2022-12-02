@@ -7,13 +7,10 @@
     <title>Document</title>
   </head>
   <body>
-    This is Userpage
-    <h1>Hello</h1>
-    <%= dataUser[0].KH_TEN %>
+    <h1>This is HomePage</h1>
+    <a href="/sign_in">Đăng nhập</a>
     <br />
-    <a href="/process_sign_out">Log out</a>
-    <br />
-    <br />
+    <a href="#">Đăng ký</a>
     <table border="1" width="100%">
       <tr>
         <th>Tên món ăn</th>
@@ -27,13 +24,6 @@
         <td><%= dataFoods[i].MAN_MIEUTA %></td>
         <td><%= dataFoods[i].MAN_TINHTRANG %></td>
         <td><%= dataFoods[i].MAN_GIA %></td>
-        <td>
-          <form
-            action="/accb_food.vn/process_add_to_cart/id=<%=dataFoods[i].MAN_MA %>"
-          >
-            <button>Thêm vào giở hàng</button>
-          </form>
-        </td>
       </tr>
       <%}%>
     </table>
