@@ -1,1 +1,0 @@
-﻿exec pr_themmonan 'ma1','ch1','td1','cn1','pizza','ngon',N'Bình thường','100000'
