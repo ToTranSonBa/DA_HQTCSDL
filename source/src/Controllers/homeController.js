@@ -333,6 +333,10 @@ let processUpload_file=async (req,res)=>{
     });
 }
 //
+let getCartpage =async (req,res)=>{
+    return res.render('cart.ejs');   
+}
+//
 module.exports={
     getHomepage,
     getSign_in,
@@ -346,5 +350,6 @@ module.exports={
     getProfilepage,
     processUpload_file,
     getTest,
-    getSign_up
+    getSign_up,
+    getCartpage
 }
