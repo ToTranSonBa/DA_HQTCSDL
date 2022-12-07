@@ -122,9 +122,11 @@
                                     <span><%= dataFoods[i].MAN_GIA %></span>
                                 </span>
                             </div>
-                            <button>Add to cart
-                                <i class="fa-sharp fa-solid fa-cart-plus"></i>
-                            </button>
+                            <form action="/accb_food.vn/addto_cart/id/'<%= dataFoods[i].MAN_MA %>'" method="GET">
+                                <button>Add to cart
+                                    <i class="fa-sharp fa-solid fa-cart-plus"></i>
+                                </button>
+                            </form>
                         </div>
                     </div>
                 <% } %>
