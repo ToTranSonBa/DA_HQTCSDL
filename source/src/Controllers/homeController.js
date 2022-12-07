@@ -266,25 +266,25 @@ let processSign_in = async (req,res)=>{
                 return res.redirect('/accb_food.vn/admin');
             }//
             else if(s1 == 'KHACHHANG'.trim()){
-                let result = await pool.request().query(`select * from KHACHHANG where MA='${data_user[0].MA}'`);
+                let result = await pool.request().query(`select * from KHACHHANG where KH_MA='${data_user[0].MA}'`);
                 let user=result.recordset;
                 req.session.user=user;
                 return res.redirect('/accb_food.vn');
             }//
             else if(s1 == 'DOITAC'.trim()){
-                let result = await pool.request().query(`select * from DOITAC where MA='${data_user[0].MA}'`);
+                let result = await pool.request().query(`select * from DOITAC where DT_MA='${data_user[0].MA}'`);
                 let partner=result.recordset;
                 req.session.partner=partner;
                 return res.redirect('/accb_food.vn/doitac');
             }//
             else if(s1 == 'TAIXE'.trim()){
-                let result = await pool.request().query(`select * from TAIXE where MA='${data_user[0].MA}'`);
+                let result = await pool.request().query(`select * from TAIXE where TX_MA='${data_user[0].MA}'`);
                 let driver=result.recordset;
                 req.session.driver=driver;
                 return res.redirect('/accb_food.vn/taixe');
             }//
             else{
-                let result = await pool.request().query(`select * from NHANVIEN where MA='${data_user[0].MA}'`);
+                let result = await pool.request().query(`select * from NHANVIEN where NV_MA='${data_user[0].MA}'`);
                 let agent=result.recordset;
                 req.session.agent=agent;
                 return res.redirect('/accb_food.vn/nhanvien');
@@ -309,7 +309,29 @@ let processSign_out = async (req,res)=>{
 }
 //
 let getProfilepage = async (req,res)=>{
-    return res.render('profile.ejs')
+    if(req.session.user){
+        let data_address=[];
+        try {
+            await pool.connect();
+            // Dia Chi
+            let address = await pool.request().query(`select * from DIACHI where DC_MATINH='${req.session.user[0].DC_MATINH}' and DC_MAHUYEN='${req.session.user[0].DC_MAHUYEN}' and DC_MAXA='${req.session.user[0].DC_MAXA}'`)
+            data_address=address.recordset;
+            
+            return res.render('profile.ejs',{
+                dataUser: req.session.user,
+                dataAddress: data_address
+            });
+        }
+        catch (err) {
+            console.log("ERROR:", err)
+        }
+        finally {
+            pool.close();
+        }
+    }
+    else{
+        return res.redirect('/');
+    }
 }
 //
 const upload = multer().single('profile_pic');
@@ -345,6 +367,10 @@ let getProfilepage_Test = async (req,res)=>{
     return res.render('info.ejs')
 }
 //
+let getOrderpage = async (req,res)=>{
+    return res.render('orders.ejs')
+}
+//
 module.exports={
     getHomepage,
     getSign_in,
@@ -361,5 +387,6 @@ module.exports={
     getSign_up,
     getCartpage,
     getFoodDetailpage,
-    getProfilepage_Test
+    getProfilepage_Test,
+    getOrderpage
 }
