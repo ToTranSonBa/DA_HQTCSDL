@@ -50,6 +50,8 @@ const initWebRoute=(app)=>{
     router.post('/accb_food.vn/process_upload_file',upload.single('profile_pic'),homeController.processUpload_file);
     router.get('/test', homeController.getTest);
     router.get('/accb_food.vn/cart', homeController.getCartpage);
+    router.get('/accb_food.vn/food_detail', homeController.getFoodDetailpage);
+    router.get('/accb_food.vn/profile_test', homeController.getProfilepage_Test);
     
     return app.use('/',router);
 }

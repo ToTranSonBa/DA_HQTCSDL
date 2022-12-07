@@ -337,6 +337,14 @@ let getCartpage =async (req,res)=>{
     return res.render('cart.ejs');   
 }
 //
+let getFoodDetailpage = (req,res)=>{
+    return res.render('fooddetail.ejs');
+}
+//
+let getProfilepage_Test = async (req,res)=>{
+    return res.render('info.ejs')
+}
+//
 module.exports={
     getHomepage,
     getSign_in,
@@ -351,5 +359,7 @@ module.exports={
     processUpload_file,
     getTest,
     getSign_up,
-    getCartpage
+    getCartpage,
+    getFoodDetailpage,
+    getProfilepage_Test
 }
