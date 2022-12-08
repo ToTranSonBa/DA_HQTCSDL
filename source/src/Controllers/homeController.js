@@ -369,9 +369,16 @@ let getCartpage =async (req,res)=>{
                 let foods=await pool.request().query(`select * from MONAN where MAN_MA='${data_foods_incart[i].MAN_MA}'`);
                 data_foods.push(foods.recordset[0]);
             }
+            // Total cost
+            let cost=0;
+            for(let i=0;i<data_foods_incart.length;i++){
+                cost += data_foods[i].MAN_GIA*data_foods_incart[i].SOLUONG;
+            }
+
             return res.render('cart.ejs',{
                 dataFoodsinCart: data_foods_incart,
-                dataFoods: data_foods
+                dataFoods: data_foods,
+                totalCost: cost
             });
 
         }catch (err) {
@@ -445,21 +452,25 @@ let updateQuantity = async (req,res)=>{
 
             await pool.connect();
 
-            let foods=await pool.request().query(`select * from GIOHANG where MAN_MA=${req.params.id} and KH_MA='${req.session.user[0].KH_MA}'`);
+            let foods=await pool.request().query(`select * from GIOHANG where MAN_MA='${req.params.id}' and KH_MA='${req.session.user[0].KH_MA}'`);
             data_foods=foods.recordset;
             var soluong_bd=data_foods[0].SOLUONG;
 
             if(operator==0){
                 var soluong_sau=soluong_bd+1;
                 
-                await pool.request().query(`update GIOHANG set SOLUONG='${soluong_sau}' where MAN_MA=${req.params.id} and KH_MA='${req.session.user[0].KH_MA}'`);
+                await pool.request().query(`update GIOHANG set SOLUONG='${soluong_sau}' where MAN_MA='${req.params.id}' and KH_MA='${req.session.user[0].KH_MA}'`);
                 return res.redirect('/accb_food.vn/cart');
             }
             else if(operator==1){
                 var soluong_sau=soluong_bd-1;
-                
-                await pool.request().query(`update GIOHANG set SOLUONG='${soluong_sau}' where MAN_MA=${req.params.id} and KH_MA='${req.session.user[0].KH_MA}'`);
-                return res.redirect('/accb_food.vn/cart');
+                if(soluong_sau<=0){
+                    await pool.request().query(`delete from GIOHANG where MAN_MA='${req.params.id}' and KH_MA='${req.session.user[0].KH_MA}'`);
+                    return res.redirect('/accb_food.vn/cart');
+                }else{
+                    await pool.request().query(`update GIOHANG set SOLUONG='${soluong_sau}' where MAN_MA='${req.params.id}' and KH_MA='${req.session.user[0].KH_MA}'`);
+                    return res.redirect('/accb_food.vn/cart');
+                }
             }
             else{
                 return res.redirect('/');

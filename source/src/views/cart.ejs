@@ -53,12 +53,16 @@
           <div class="Nav-Subnav-love">
             <i class="fa-regular fa-heart"></i>
           </div>
+          
           <div class="Nav-Subnav-cart">
             <i class="fa-sharp fa-solid fa-cart-plus"></i>
           </div>
+
           <div class="Nav-Subnav-account">
-            <i class="fa-regular fa-user"></i>
-          </div>
+            <a href="/accb_food.vn/profile">
+                <i class="fa-regular fa-user"></i>
+            </a>
+        </div>
         </div>
       </nav>
     </section>
@@ -112,15 +116,16 @@
                     </div>
                     <div class="btn_bottom">
 
-                      <form action="accb_food.vn/cart/quantity/id/<%=dataFoods[i].MAN_MA%>/1"
+                      <form action="/accb_food.vn/cart/quantity/1/id/<%=dataFoods[i].MAN_MA %>" method="GET">
                         <button>
                           <i class="fa-solid fa-minus"></i>
                         </button>
                       </form>
+
                       <span class="quantity">
                         <%=dataFoodsinCart[i].SOLUONG%>
                       </span>
-                      <form action="accb_food.vn/cart/quantity/id/<%=dataFoods[i].MAN_MA%>/0">
+                      <form action="/accb_food.vn/cart/quantity/0/id/<%=dataFoods[i].MAN_MA%>" method="GET">
                         <button>
                           <i class="fa-solid fa-plus"></i>
                         </button>
@@ -172,23 +177,27 @@
             <span>Totals cost:</span>
             <div class="stock_rate">
               <span>Total stock:</span>
+
               <div class="price">
                 <span>$</span>
-                <span>255,68</span>
+                <span>
+                  <%=totalCost %>
+                </span>
               </div>
+              
             </div>
             <div class="shipping_rate">
               <span>Shipping rates:</span>
               <div class="price">
                 <span>$</span>
-                <span>10,00</span>
+                <span>10000</span>
               </div>
             </div>
           </div>
           <div class="bottom_right_bottom_cart">
             <div class="total">
               <span>$</span>
-              <span>265,68</span>
+              <span><%=totalCost+10000 %></span>
             </div>
             <button>Order now!</button>
           </div>
