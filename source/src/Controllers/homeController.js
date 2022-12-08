@@ -436,6 +436,47 @@ let getAddtoCart = async (req,res)=>{
     }
 }
 //
+let updateQuantity = async (req,res)=>{
+    if(req.params && req.session.user){
+        let data_foods=[]
+        try{
+            let operator=req.params.operator;
+            let id=req.params.id;
+
+            await pool.connect();
+
+            let foods=await pool.request().query(`select * from GIOHANG where MAN_MA=${req.params.id} and KH_MA='${req.session.user[0].KH_MA}'`);
+            data_foods=foods.recordset;
+            var soluong_bd=data_foods[0].SOLUONG;
+
+            if(operator==0){
+                var soluong_sau=soluong_bd+1;
+                
+                await pool.request().query(`update GIOHANG set SOLUONG='${soluong_sau}' where MAN_MA=${req.params.id} and KH_MA='${req.session.user[0].KH_MA}'`);
+                return res.redirect('/accb_food.vn/cart');
+            }
+            else if(operator==1){
+                var soluong_sau=soluong_bd-1;
+                
+                await pool.request().query(`update GIOHANG set SOLUONG='${soluong_sau}' where MAN_MA=${req.params.id} and KH_MA='${req.session.user[0].KH_MA}'`);
+                return res.redirect('/accb_food.vn/cart');
+            }
+            else{
+                return res.redirect('/');
+            }
+            
+        }catch (err) {
+            console.log("ERROR:", err)
+        }
+        finally {
+            pool.close();
+        }
+    }
+    else{
+        return res.redirect('/accb_food.vn');
+    }
+}
+//
 module.exports={
     getHomepage,
     getSign_in,
@@ -453,5 +494,6 @@ module.exports={
     getCartpage,
     getFoodDetailpage,
     getOrderpage,
-    getAddtoCart
+    getAddtoCart,
+    updateQuantity
 }
