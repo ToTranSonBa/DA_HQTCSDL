@@ -283,6 +283,7 @@ select * from KHACHHANG
 insert into DOITAC values('dt_01',N'Nguyễn Văn F','0395639615','ab5c@gmail.com');
 insert into DOITAC values('dt_02',N'Nguyễn Văn G','0395639616','abc6@gmail.com');
 
+select * from DOITAC
 
 insert into NHANVIEN values('nv_01',N'Nguyễn Văn H','2002-01-11','5809237594','0395639617',N'Nam','abc7@gmail.com','59','1','1');
 insert into NHANVIEN values('nv_02',N'Nguyễn Văn J','2002-02-22','5809345367','0395639618',N'Nam','abc8@gmail.com','11','1','1');
