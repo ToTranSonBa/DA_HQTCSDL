@@ -2,13 +2,13 @@ import sql from "mssql/msnodesqlv8";
 
 // database configuration
 const config = {
-    server: 'ADMIN\\SQLEXPRESS',
+    server: 'DUONG-GV62\\SQLEXPRESS',
     //user:'',
     //password:'',
     database: 'DOAN_HQTCSDL',
-    driver:'msnodesqlv8',
+    driver: 'msnodesqlv8',
     options: {
-       trustedConnection: true,
+        trustedConnection: true,
     }
 }
 // connect to database
