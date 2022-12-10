@@ -1,6 +1,6 @@
 import pool from "../configs/connectDB";
 import multer from 'multer';
-//
+//User============================================================================================================================================================================================
 let getHomepage = async (req, res) => {
     let data_foods = [];
     if (req.session.user) {
@@ -38,15 +38,11 @@ let getHomepage = async (req, res) => {
     }
 }
 //
-let getTest = (req, res) => {
-    return res.render('homepage.ejs');
-}
-//
-let getSign_in = (req, res) => {
+let getSignIn = (req, res) => {
     return res.render('sign_in.ejs')
 }
 //
-let getSign_up = (req, res) => {
+let getSignUp = (req, res) => {
     return res.render('sign_up.ejs')
 }
 //
@@ -97,156 +93,7 @@ let getHomepageUser = async (req, res) => {
     }
 }
 //
-let getHomepageAdmin = async (req, res) => {
-    if (req.session.admin) {
-        let data_drivers = [];
-        let data_users = [];
-        let data_agents = [];
-        let data_partners = [];
-        try {
-            await pool.connect();
-            // Driver
-            let drivers = await pool.request().query('select * from TAIXE')
-            data_drivers = drivers.recordset;
-            // User
-            let users = await pool.request().query('select * from KHACHHANG')
-            data_users = users.recordset;
-            // Agent
-            let agents = await pool.request().query('select * from NHANVIEN')
-            data_agents = agents.recordset;
-            // Partner
-            let partners = await pool.request().query('select * from DOITAC')
-            data_partners = partners.recordset;
-
-            return res.render('admin.ejs', {
-                dataAdmin: req.session.admin,
-                dataDrivers: data_drivers,
-                dataUsers: data_users,
-                dataAgents: data_agents,
-                dataPartners: data_partners
-            });
-        }
-        catch (err) {
-            console.log("ERROR:", err)
-        }
-        finally {
-            pool.close();
-        }
-    }
-    else {
-        return res.redirect('/');
-    }
-}
-//
-let getHomepageDriver = async (req, res) => {
-    if (req.session.driver) {
-        let data_orderforms_situation = [];
-        try {
-            await pool.connect();
-            // Order form situation
-            let order_forms_situation = await pool.request().query('select * from TINHTRANGGIAOHANG')
-            data_orderforms_situation = order_forms_situation.recordset;
-
-            return res.render('driver.ejs', {
-                dataDriver: req.session.driver,
-                dataOrderFormSituation: data_orderforms_situation
-            });
-        }
-        catch (err) {
-            console.log("ERROR:", err)
-        }
-        finally {
-            pool.close();
-        }
-    }
-    else {
-        return res.redirect('/')
-    }
-}
-//
-let getHomepageDoitac = async (req, res) => {
-    if (req.session.partner) {
-        let data_contracts = [];
-        let data_stores = [];
-        let data_orderforms = [];
-        let data_orderforms_situation = [];
-        let data_menus = [];
-        let data_foods = [];
-        try {
-            await pool.connect();
-            // Contracts
-            let contracts = await pool.request().query('select * from HOPDONG')
-            data_contracts = contracts.recordset;
-            // Store
-            let stores = await pool.request().query('select * from CUAHANG')
-            data_stores = stores.recordset;
-            // Order form
-            let order_forms = await pool.request().query('select * from DONHANG')
-            data_orderforms = order_forms.recordset;
-            // Order form situation
-            let order_forms_situation = await pool.request().query('select * from TINHTRANGGIAOHANG')
-            data_orderforms_situation = order_forms_situation.recordset;
-            // Menu
-            let menus = await pool.request().query('select * from THUCDON')
-            data_menus = menus.recordset;
-            // Food
-            let foods = await pool.request().query('select * from MONAN')
-            data_menus = foods.recordset;
-
-            return res.render('partner.ejs', {
-                dataPartner: req.session.partner,
-                dataContracts: data_contracts,
-                dataStores: data_stores,
-                dataOrderForms: data_orderforms,
-                dataOrderFormsSituation: data_orderforms_situation,
-                dataMenus: data_menus,
-                dataFoods: data_foods
-            });
-        }
-        catch (err) {
-            console.log("ERROR:", err)
-        }
-        finally {
-            pool.close();
-        }
-    }
-    else {
-        return res.redirect('/');
-    }
-}
-//
-let getHomepageNhanvien = async (req, res) => {
-    if (req.session.agent) {
-        let data_contracts = [];
-        let data_regforms = [];
-        try {
-            await pool.connect();
-            // Contracts
-            let contracts = await pool.request().query('select * from HOPDONG')
-            data_contracts = contracts.recordset;
-            // Registration forms
-            let registration_forms = await pool.request().query('select * from HOSODANGKY')
-            data_regforms = registration_forms.recordset;
-
-            return res.render('agent.ejs', {
-                dataAgent: req.session.agent,
-                dataContracts: data_contracts,
-                dataRegForms: data_regforms
-            });
-        }
-        catch (err) {
-            console.log("ERROR:", err)
-        }
-        finally {
-            pool.close();
-        }
-    }
-    else {
-        return res.redirect('/');
-    }
-}
-//
-let processSign_in = async (req, res) => {
+let processSignIn = async (req, res) => {
     let data_user = [];
 
     try {
@@ -302,7 +149,7 @@ let processSign_in = async (req, res) => {
     }
 }
 //
-let processSign_out = async (req, res) => {
+let processSignOut = async (req, res) => {
     req.session.destroy((err) => {
         return res.redirect('/');
     });
@@ -336,7 +183,7 @@ let getProfilepage = async (req, res) => {
 //
 const upload = multer().single('profile_pic');
 
-let processUpload_file = async (req, res) => {
+let processUploadFile = async (req, res) => {
     // 'profile_pic' is the name of our file input field in the HTML form
     upload(req, res, function (err) {
         // req.file contains information of uploaded file
@@ -487,36 +334,185 @@ let updateQuantity = async (req, res) => {
         return res.redirect('/accb_food.vn');
     }
 }
+//Partner=========================================================================================================================================================================================
+let getHomepageDoitac = async (req, res) => {
+    if (req.session.partner) {
+        let data_contracts = [];
+        let data_stores = [];
+        let data_orderforms = [];
+        let data_orderforms_situation = [];
+        let data_menus = [];
+        let data_foods = [];
+        try {
+            await pool.connect();
+            // Contracts
+            let contracts = await pool.request().query('select * from HOPDONG')
+            data_contracts = contracts.recordset;
+            // Store
+            let stores = await pool.request().query('select * from CUAHANG')
+            data_stores = stores.recordset;
+            // Order form
+            let order_forms = await pool.request().query('select * from DONHANG')
+            data_orderforms = order_forms.recordset;
+            // Order form situation
+            let order_forms_situation = await pool.request().query('select * from TINHTRANGGIAOHANG')
+            data_orderforms_situation = order_forms_situation.recordset;
+            // Menu
+            let menus = await pool.request().query('select * from THUCDON')
+            data_menus = menus.recordset;
+            // Food
+            let foods = await pool.request().query('select * from MONAN')
+            data_menus = foods.recordset;
 
+            return res.render('partner.ejs', {
+                dataPartner: req.session.partner,
+                dataContracts: data_contracts,
+                dataStores: data_stores,
+                dataOrderForms: data_orderforms,
+                dataOrderFormsSituation: data_orderforms_situation,
+                dataMenus: data_menus,
+                dataFoods: data_foods
+            });
+        }
+        catch (err) {
+            console.log("ERROR:", err)
+        }
+        finally {
+            pool.close();
+        }
+    }
+    else {
+        return res.redirect('/');
+    }
+}
+//Driver==========================================================================================================================================================================================
+let getHomepageDriver = async (req, res) => {
+    if (req.session.driver) {
+        let data_orderforms_situation = [];
+        try {
+            await pool.connect();
+            // Order form situation
+            let order_forms_situation = await pool.request().query('select * from TINHTRANGGIAOHANG')
+            data_orderforms_situation = order_forms_situation.recordset;
+
+            return res.render('driver.ejs', {
+                dataDriver: req.session.driver,
+                dataOrderFormSituation: data_orderforms_situation
+            });
+        }
+        catch (err) {
+            console.log("ERROR:", err)
+        }
+        finally {
+            pool.close();
+        }
+    }
+    else {
+        return res.redirect('/')
+    }
+}
+//Agent===========================================================================================================================================================================================
+let getHomepageNhanvien = async (req, res) => {
+    if (req.session.agent) {
+        let data_contracts = [];
+        let data_regforms = [];
+        try {
+            await pool.connect();
+            // Contracts
+            let contracts = await pool.request().query('select * from HOPDONG')
+            data_contracts = contracts.recordset;
+            // Registration forms
+            let registration_forms = await pool.request().query('select * from HOSODANGKY')
+            data_regforms = registration_forms.recordset;
+
+            return res.render('agent.ejs', {
+                dataAgent: req.session.agent,
+                dataContracts: data_contracts,
+                dataRegForms: data_regforms
+            });
+        }
+        catch (err) {
+            console.log("ERROR:", err)
+        }
+        finally {
+            pool.close();
+        }
+    }
+    else {
+        return res.redirect('/');
+    }
+}
+//Admin===========================================================================================================================================================================================
+let getHomepageAdmin = async (req, res) => {
+    if (req.session.admin) {
+        let data_drivers = [];
+        let data_users = [];
+        let data_agents = [];
+        let data_partners = [];
+        try {
+            await pool.connect();
+            // Driver
+            let drivers = await pool.request().query('select * from TAIXE')
+            data_drivers = drivers.recordset;
+            // User
+            let users = await pool.request().query('select * from KHACHHANG')
+            data_users = users.recordset;
+            // Agent
+            let agents = await pool.request().query('select * from NHANVIEN')
+            data_agents = agents.recordset;
+            // Partner
+            let partners = await pool.request().query('select * from DOITAC')
+            data_partners = partners.recordset;
+
+            return res.render('admin.ejs', {
+                dataAdmin: req.session.admin,
+                dataDrivers: data_drivers,
+                dataUsers: data_users,
+                dataAgents: data_agents,
+                dataPartners: data_partners
+            });
+        }
+        catch (err) {
+            console.log("ERROR:", err)
+        }
+        finally {
+            pool.close();
+        }
+    }
+    else {
+        return res.redirect('/');
+    }
+}
+
+//Test============================================================================================================================================================================================
 let createSign_up = (req, res) => {
     console.log("check req : ", req.body)
     return res.send('call post create new user')
 }
-
-let getTest1 = (req, res) => {
-    return res.render('./partner/signup.ejs');
+//
+let getTest = (req, res) => {
+    return res.render('./partner/Home.ejs');
 }
 
 //
 module.exports = {
     getHomepage,
-    getSign_in,
+    getSignIn,
     getHomepageUser,
     getHomepageAdmin,
     getHomepageDoitac,
     getHomepageNhanvien,
     getHomepageDriver,
-    processSign_in,
-    processSign_out,
+    processSignIn,
+    processSignOut,
     getProfilepage,
-    processUpload_file,
-    getTest,
-    getSign_up,
+    processUploadFile,
+    getSignUp,
     getCartpage,
     getFoodDetailpage,
     getOrderpage,
     getAddtoCart,
     updateQuantity,
     createSign_up,
-    getTest1
+    getTest
 }
