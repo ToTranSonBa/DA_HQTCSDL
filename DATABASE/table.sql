@@ -1597,6 +1597,88 @@ commit transaction
 GO
 
 --------------- đối tác
+go
+create 
+--drop
+proc sp_dscuahangdoitac
+@ma_dt char(10)
+as
+begin tran
+	begin try
+		if(not exists(select * from DOITAC where DT_MA=@ma_dt))
+		begin
+			raiserror('ma doi tac la null', 16, 1)
+			rollback tran
+			return
+		end
+		select * from CUAHANG where DT_MA=@ma_dt
+	end try
+	begin catch
+		raiserror('khong hien thi duoc thong tin cua hang', 16, 1)
+		rollback tran
+		return
+	end catch
+commit tran
+go
+
+create 
+--drop
+proc sp_chinhanhcuahangdoitac
+@ma_dt char(10), @ma_ch char(10)
+as
+begin tran
+	begin try
+		if(not exists(select * from DOITAC where DT_MA=@ma_dt))
+		begin
+			raiserror('ma doi tac la null', 16, 1)
+			rollback tran
+			return
+		end
+		if(not exists(select * from CUAHANG where CH_MA=@ma_ch))
+		begin
+			raiserror('ma cua hang la null', 16, 1)
+			rollback tran
+			return
+		end
+	select * from CHINHANH where CH_MA=@ma_ch
+	end try
+	begin catch
+		raiserror('khong hien thi duoc thong tin chi nhanh', 16, 1)
+		rollback tran
+		return
+	end catch
+commit tran
+go
+
+create 
+--drop
+proc sp_monancuacuahangdoitac
+@ma_dt char(10), @ma_ch char(10)
+as
+begin tran
+	begin try
+		if(not exists(select * from DOITAC where DT_MA=@ma_dt))
+		begin
+			raiserror('ma doi tac la null', 16, 1)
+			rollback tran
+			return
+		end
+		if(not exists(select * from CUAHANG where CH_MA=@ma_ch))
+		begin
+			raiserror('ma cua hang la null', 16, 1)
+			rollback tran
+			return
+		end
+	select * from MONAN where CH_MA=@ma_ch
+	end try
+	begin catch
+		raiserror('khong hien thi duoc thong tin chi nhanh', 16, 1)
+		rollback tran
+		return
+	end catch
+commit tran
+go
+
 
 --theo doi don hang theo trang thai
 create 
@@ -2132,7 +2214,7 @@ insert into dbo.KHACHHANG
     DC_SONHA
 )
 VALUES
-(	N'KH_01',  
+(	N'KH_1',  
 	N'Nguyễn A', -- KH_TEN - nvarchar(100)
     '0395639633', -- KH_SDT - char(100)
     'abc@gmail', -- KH_MAIL - char(100)
@@ -2147,8 +2229,7 @@ VALUES
 --------------------------------------- ADMIN
 
 
-
-insert into KHACHHANG values('KH_2', N'Nguyễn B','0395639611','abc1@gmail',N'Nam','/images/profile pic/pic-1.png','11','1','101', NULL);
+insert into KHACHHANG values('KH_1', N'Nguyễn A','0395639633','abc@gmail',N'Nam','/images/profile pic/pic-1.png','11','1','101', NULL);
 insert into KHACHHANG values('KH_3', N'Nguyễn C','0395639612','abc2@gmail',N'Nữ','/images/profile pic/pic-2.png','70','51','501', NULL);
 insert into KHACHHANG values('KH_4', N'Nguyễn D','0395639613','abc3@gmail',N'Nam','/images/profile pic/pic-3.png','11','1','101', NULL);
 insert into KHACHHANG values('KH_5', N'Nguyễn E','0395639614','abc4@gmail',N'Nữ','/images/profile pic/pic-4.png','59','81','1001', NULL);
@@ -2177,7 +2258,7 @@ insert into MONAN values('MN_2','TD_1','CN_3','CH_1',N'Hamburger Bò','efg',NULL
 insert into MONAN values('MN_3','TD_2','CN_2','CH_4',N'Pizza Thập Cẩm','ekj',NULL,'/images/foods/dish-4.png',199999);
 INSERT into MONAN values('MN_5','TD_2','CN_2','CH_4',N'Gà Nướng','ekj',NULL,'/images/foods/dish-3.png',99999);
 
-insert into TAIKHOAN values('KH_01','zp19d0z','1234','KHACHHANG');
+insert into TAIKHOAN values('KH_1','zp19d0z','1234','KHACHHANG');
 insert into TAIKHOAN values('KH_2','20120429','1234','KHACHHANG');
 insert into TAIKHOAN values('KH_3','20120000','1234','KHACHHANG');
 insert into TAIKHOAN values('KH_4','20120001','1234','KHACHHANG');
@@ -2231,4 +2312,11 @@ VALUES
 
 EXEC dbo.sp_chapnhandonhang @ma = 'DH_4' -- char(10)
 
-select * from MONAN
+select * from TAIKHOAN
+
+select* from GIOHANG
+select * from KHACHHANG
+
+
+exec SP_KHDATHANG 'KH_1',N'Thanh toán khi nhận hàng'
+select * from DONHANG

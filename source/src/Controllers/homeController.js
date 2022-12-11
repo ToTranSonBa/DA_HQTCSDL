@@ -1,5 +1,6 @@
 import pool from "../configs/connectDB";
 import multer from 'multer';
+import session from "express-session";
 //User============================================================================================================================================================================================
 let getHomepage = async (req, res) => {
     let data_foods = [];
@@ -245,6 +246,15 @@ let getFoodDetailpage = (req, res) => {
 }
 //
 let getOrderpage = async (req, res) => {
+    let { pay, address, note } = req.body;
+    if(req.body && req.session.user){
+        let { pay, address, note} = req.body;
+        await pool.connect();
+        await pool.request().query(`exec SP_KHDATHANG 'KH_1',N'Thanh toán khi nhận hàng'`);
+    }
+    else{
+        return res.redirect('/accb_food.vn/cart')
+    }
     return res.render('orders.ejs')
 }
 //
@@ -254,7 +264,6 @@ let getAddtoCart = async (req, res) => {
         try {
             await pool.connect();
             let food=await pool.request().query(`select * from MONAN where MAN_MA=${req.params.id}`);
-            console.log('check======>',food.recordset);
             // Them vao gio hang
             let count = await pool.request().query(`select count(*) as count from GIOHANG`);
             if (count.recordset[0].count == 0) {
