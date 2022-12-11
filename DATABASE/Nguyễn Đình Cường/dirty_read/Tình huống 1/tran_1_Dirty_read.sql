@@ -1,0 +1,6 @@
+﻿USE DOAN_HQTCSDL
+
+exec  PROC_CAPNHATMONAN_DT 'MN_4', 'CH_4', 'CN_2', 'TD_2', N'BÁNH KẸO', N'do', N'Có bán', 25000
+GO 
+
+SELECT * FROM dbo.MONAN

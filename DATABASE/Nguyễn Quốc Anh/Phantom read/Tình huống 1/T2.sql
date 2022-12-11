@@ -1,0 +1,6 @@
+USE DOAN_HQTCSDL
+GO
+
+EXEC pr_xoamonan 'MN_6','CH_4','CN_2','TD_2'
+
+SELECT * FROM dbo.MONAN
