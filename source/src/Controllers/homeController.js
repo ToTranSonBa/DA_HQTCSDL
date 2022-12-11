@@ -253,10 +253,12 @@ let getAddtoCart = async (req, res) => {
         let data_foods = []
         try {
             await pool.connect();
+            let food=await pool.request().query(`select * from MONAN where MAN_MA=${req.params.id}`);
+            console.log('check======>',food.recordset);
             // Them vao gio hang
             let count = await pool.request().query(`select count(*) as count from GIOHANG`);
             if (count.recordset[0].count == 0) {
-                await pool.request().query(`insert into GIOHANG(MAN_MA,KH_MA,SOLUONG) values (${req.params.id},'${req.session.user[0].KH_MA}', '1')`);
+                await pool.request().query(`insert into GIOHANG(MAN_MA,TD_MA,CN_MA,CH_MA,KH_MA,SOLUONG,NOTES) values (${req.params.id},'${food.recordset[0].TD_MA}','${food.recordset[0].CN_MA}','${food.recordset[0].CH_MA}','${req.session.user[0].KH_MA}', '1','${food.recordset[0].MAN_MIEUTA}')`);
                 return res.redirect('/accb_food.vn/');
             }
             else {
@@ -271,7 +273,7 @@ let getAddtoCart = async (req, res) => {
                     return res.redirect('/accb_food.vn/');
                 }
                 else if (!data_foods.length) {
-                    await pool.request().query(`insert into GIOHANG(MAN_MA,KH_MA,SOLUONG) values (${req.params.id},'${req.session.user[0].KH_MA}', '1')`);
+                    await pool.request().query(`insert into GIOHANG(MAN_MA,TD_MA,CN_MA,CH_MA,KH_MA,SOLUONG,NOTES) values (${req.params.id},'${food.recordset[0].TD_MA}','${food.recordset[0].CN_MA}','${food.recordset[0].CH_MA}','${req.session.user[0].KH_MA}', '1','${food.recordset[0].MAN_MIEUTA}')`);
                     return res.redirect('/accb_food.vn/');
                 }
                 else {

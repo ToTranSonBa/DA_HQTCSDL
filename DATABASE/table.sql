@@ -210,6 +210,7 @@ TABLE KHACHHANG (
 	KH_SDT CHAR(100),
 	KH_MAIL CHAR(100),
 	KH_GIOITINH NVARCHAR(10),
+	KH_ANH NVARCHAR(50),
 	--DIACHI
 	DC_MATINH CHAR(10),
 	DC_MAHUYEN CHAR(10),
@@ -1518,7 +1519,7 @@ begin transaction
 		begin
 			update TINHTRANGGIAOHANG set TTGH_TINHTRANG=@tinhtrang, DC_MATINH = @matinh, DC_MAHUYEN = @mahuyen, DC_MAXA = @maxa
 			WHERE DH_MA = @ma_dh
-			UPDATE dbo.DONHANG SET TX_MA = @ma_tx,  WHERE @ma_dh = DH_MA
+			UPDATE dbo.DONHANG SET TX_MA = @ma_tx  WHERE @ma_dh = DH_MA
 		end
 		else
 		begin
@@ -2116,6 +2117,8 @@ insert into DIACHI values('11','1','101',N'Cao Bằng','abc','bcd');
 insert into DIACHI values('70','51','501',N'Tây Ninh','efg','abs');
 insert into DIACHI values('59','81','1001',N'TP. Hồ Chí Minh','ekj','lop');
 
+select * from DIACHI
+
 insert into dbo.KHACHHANG
 (
 	KH_MA,
@@ -2134,6 +2137,7 @@ VALUES
     '0395639633', -- KH_SDT - char(100)
     'abc@gmail', -- KH_MAIL - char(100)
     N'Nam', -- KH_GIOITINH - nvarchar(10)
+	'/images/profile pic/pic-1.png',
     11, -- DC_MATINH - int
     1, -- DC_MAHUYEN - int
     101, -- DC_MAXA - int
@@ -2144,15 +2148,17 @@ VALUES
 
 
 
-insert into KHACHHANG values('KH_2', N'Nguyễn B','0395639611','abc1@gmail',N'Nam','11','1','101', NULL);
-insert into KHACHHANG values('KH_3', N'Nguyễn C','0395639612','abc2@gmail',N'Nam','70','51','501', NULL);
-insert into KHACHHANG values('KH_4', N'Nguyễn D','0395639613','abc3@gmail',N'Nam','11','1','101', NULL);
-insert into KHACHHANG values('KH_5', N'Nguyễn E','0395639614','abc4@gmail',N'Nam','59','81','1001', NULL);
+insert into KHACHHANG values('KH_2', N'Nguyễn B','0395639611','abc1@gmail',N'Nam','/images/profile pic/pic-1.png','11','1','101', NULL);
+insert into KHACHHANG values('KH_3', N'Nguyễn C','0395639612','abc2@gmail',N'Nữ','/images/profile pic/pic-2.png','70','51','501', NULL);
+insert into KHACHHANG values('KH_4', N'Nguyễn D','0395639613','abc3@gmail',N'Nam','/images/profile pic/pic-3.png','11','1','101', NULL);
+insert into KHACHHANG values('KH_5', N'Nguyễn E','0395639614','abc4@gmail',N'Nữ','/images/profile pic/pic-4.png','59','81','1001', NULL);
 
 insert into DOITAC values('DT_1',N'Nguyễn Văn F','0395639615','ab5c@gmail.com');
 insert into DOITAC values('DT_2',N'Nguyễn Văn G','0395639616','abc6@gmail.com');
+
 insert into NHANVIEN values('NV_1',N'Nguyễn Văn H','2002-01-11','5809237594','0395639617',N'Nam','abc7@gmail.com','11','1','101');
 insert into NHANVIEN values('NV_2',N'Nguyễn Văn J','2002-02-22','5809345367','0395639618',N'Nam','abc8@gmail.com','70','51','501');
+
 insert into TAIXE values('TX_1',N'Nguyễn K','134804358','0395639619','j29-4565','1458912432',N'MB Bank',N'Nam','59','81','1001');
 insert into TAIXE values('TX_2',N'Nguyễn L','134809135','0395639620','j29-3479','1458947598',N'Agribank',N'Nam','59','81','1001');
 
@@ -2166,12 +2172,12 @@ insert into CHINHANH values('CN_2','CH_4','70','51','501',N'Chi Nhánh TP Hồ C
 insert into THUCDON values('TD_1','CN_3','CH_1',N'Menu Hambu');
 insert into THUCDON values('TD_2','CN_2','CH_4',N'Menu Pizza');
 
-insert into MONAN values('MN_1','TD_1','CN_3','CH_1',N'Hamburger Cá','abc',NULL,NULL,89999);
-insert into MONAN values('MN_2','TD_1','CN_3','CH_1',N'Hamburger Bò','efg',NULL,NULL,99999);
-insert into MONAN values('MN_3','TD_2','CN_2','CH_4',N'Pizza Thập Cẩm','ekj',NULL,NULL,199999);
-INSERT into MONAN values('MN_5','TD_2','CN_2','CH_4',N'ĐẬU PHỘNG','ekj',NULL,NULL,199999);
+insert into MONAN values('MN_1','TD_1','CN_3','CH_1',N'Hamburger Cá','abc',NULL,'/images/foods/dish-1.png',89999);
+insert into MONAN values('MN_2','TD_1','CN_3','CH_1',N'Hamburger Bò','efg',NULL,'/images/foods/menu-2.jpg',99999);
+insert into MONAN values('MN_3','TD_2','CN_2','CH_4',N'Pizza Thập Cẩm','ekj',NULL,'/images/foods/dish-4.png',199999);
+INSERT into MONAN values('MN_5','TD_2','CN_2','CH_4',N'Gà Nướng','ekj',NULL,'/images/foods/dish-3.png',99999);
 
-INSERT into TAIKHOAN values('KH_01','zp19d0z','1234','KHACHHANG');
+insert into TAIKHOAN values('KH_01','zp19d0z','1234','KHACHHANG');
 insert into TAIKHOAN values('KH_2','20120429','1234','KHACHHANG');
 insert into TAIKHOAN values('KH_3','20120000','1234','KHACHHANG');
 insert into TAIKHOAN values('KH_4','20120001','1234','KHACHHANG');
@@ -2179,10 +2185,13 @@ insert into TAIKHOAN values('KH_5','20120002','1234','KHACHHANG');
 
 insert into TAIKHOAN values('DT_1','20120008','1234','DOITAC');
 insert into TAIKHOAN values('DT_2','20120007','1234','DOITAC');
-insert into TAIKHOAN values('DT_3','20120003','1234','NHANVIEN');
-insert into TAIKHOAN values('DT_4','20120004','1234','NHANVIEN');
+
+insert into TAIKHOAN values('NV_1','20120003','1234','NHANVIEN');
+insert into TAIKHOAN values('NV_2','20120004','1234','NHANVIEN');
+
 insert into TAIKHOAN values('TX_1','20120005','1234','TAIXE');
 insert into TAIKHOAN values('TX_2','20120006','1234','TAIXE');
+
 
 INSERT INTO dbo.GIOHANG
 (
@@ -2221,3 +2230,5 @@ VALUES
 	GO
 
 EXEC dbo.sp_chapnhandonhang @ma = 'DH_4' -- char(10)
+
+select * from MONAN
