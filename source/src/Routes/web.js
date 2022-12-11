@@ -50,45 +50,45 @@ const initWebRoute = (app) => {
 
     //Route of Partner============================================================================================================================================================================
     router.get('/accb_food.vn/doitac', homeController.getHomepageDoitac);
-    //router.get('/accb_food.vn/doitac/sign_up', homeController.getSignUpDT);
-    // router.get('/accb_food.vn/doitac/menu',homeController.getMenupage);
-    // router.get('/accb_food.vn/doitac/add_food',homeController.getAddFood);
-    // router.get('/accb_food.vn/doitac/branch',homeController.getBranchpage);
-    // router.get('/accb_food.vn/doitac/contract_detail',homeController.getContractDetailpage);
-    // router.get('/accb_food.vn/doitac/food_detail',homeController.getFoodDetailpage);
-    // router.get('/accb_food.vn/doitac/orders',homeController.getOrderspage);
-    // router.get('/accb_food.vn/doitac/orders_detail',homeController.getOrdersDetailpage);
-    // router.get('/accb_food.vn/doitac/part_contracts',homeController.getPartContractspage);
-    // router.get('/accb_food.vn/doitac/renew_contract',homeController.getRenewContractpage);
-    // router.get('/accb_food.vn/doitac/shop',homeController.getShoppage);
+    router.get('/accb_food.vn/doitac/sign_up', homeController.getSignUpDT);
+    router.get('/accb_food.vn/doitac/menu',homeController.getMenupageDT);
+    router.get('/accb_food.vn/doitac/add_food',homeController.getAddFoodDT);
+    router.get('/accb_food.vn/doitac/branch',homeController.getBranchpageDT);
+    router.get('/accb_food.vn/doitac/contract_detail',homeController.getContractDetailpageDT);
+    router.get('/accb_food.vn/doitac/food_detail',homeController.getFoodDetailpageDT);
+    router.get('/accb_food.vn/doitac/orders',homeController.getOrderspageDT);
+    router.get('/accb_food.vn/doitac/orders_detail',homeController.getOrdersDetailpageDT);
+    router.get('/accb_food.vn/doitac/part_contracts',homeController.getPartContractspageDT);
+    router.get('/accb_food.vn/doitac/renew_contract',homeController.getRenewContractpageDT);
+    router.get('/accb_food.vn/doitac/shop',homeController.getShoppageDT);
 
     //Route of Driver=============================================================================================================================================================================
     router.get('/accb_food.vn/taixe', homeController.getHomepageDriver);
-    // router.get('/accb_food.vn/taixe/profile', homeController.getProfilepageDriver);
-    // router.get('/accb_food.vn/taixe/orders', homeController.getOrderspageDriver);
-    // router.get('/accb_food.vn/taixe/orders_detail', homeController.getOrdersDetailpageDriver);
-    // router.get('/accb_food.vn/taixe/sign_up', homeController.getSignUppageDriver);
-    // router.get('/accb_food.vn/taixe/wallet', homeController.getWalletpageDriver);
+    router.get('/accb_food.vn/taixe/profile', homeController.getProfilepageDriver);
+    router.get('/accb_food.vn/taixe/orders', homeController.getOrderspageDriver);
+    router.get('/accb_food.vn/taixe/orders_detail', homeController.getOrdersDetailpageDriver);
+    router.get('/accb_food.vn/taixe/sign_up', homeController.getSignUppageDriver);
+    router.get('/accb_food.vn/taixe/wallet', homeController.getWalletpageDriver);
 
     //Route of Agent==============================================================================================================================================================================
     router.get('/accb_food.vn/nhanvien', homeController.getHomepageNhanvien);
-    // router.get('/accb_food.vn/nhanvien/contract_detail', homeController.getContractDetailpageNhanvien);
-    // router.get('/accb_food.vn/nhanvien/employee_contract', homeController.getEmployeeContractpageNhanvien);
-    // router.get('/accb_food.vn/nhanvien/employee_partner', homeController.getEmployeePartnerpageNhanvien);
-    // router.get('/accb_food.vn/nhanvien/profile', homeController.getProfilepageNhanvien);
-    // router.get('/accb_food.vn/nhanvien/notify', homeController.getNotifypageNhanvien);
+    router.get('/accb_food.vn/nhanvien/contract_detail', homeController.getContractDetailpageNhanvien);
+    router.get('/accb_food.vn/nhanvien/employee_contract', homeController.getEmployeeContractpageNhanvien);
+    router.get('/accb_food.vn/nhanvien/employee_partner', homeController.getEmployeePartnerpageNhanvien);
+    router.get('/accb_food.vn/nhanvien/profile', homeController.getProfilepageNhanvien);
+    router.get('/accb_food.vn/nhanvien/notify', homeController.getNotifypageNhanvien);
 
     //Route of Admin==============================================================================================================================================================================
     router.get('/accb_food.vn/admin', homeController.getHomepageAdmin);
-    // router.get('/accb_food.vn/admin/add_user', homeController.getAddUserpageAdmin);
-    // router.get('/accb_food.vn/admin/admins', homeController.getAdminspageAdmin);
-    // router.get('/accb_food.vn/admin/customers', homeController.getCustomerspageAdmin);
-    // router.get('/accb_food.vn/admin/drivers', homeController.getDriverspageAdmin);
-    // router.get('/accb_food.vn/admin/edit_user', homeController.getEditUserpageAdmin);
-    // router.get('/accb_food.vn/admin/employees', homeController.getEmployeespageAdmin);
-    // router.get('/accb_food.vn/admin/list_lock', homeController.getListLockpageAdmin);
-    // router.get('/accb_food.vn/admin/partners', homeController.getPartnerspageAdmin);
-    // router.get('/accb_food.vn/admin/user_profile', homeController.getUserProfilepageAdmin);
+    router.get('/accb_food.vn/admin/add_user', homeController.getAddUserpageAdmin);
+    router.get('/accb_food.vn/admin/admins', homeController.getAdminspageAdmin);
+    router.get('/accb_food.vn/admin/customers', homeController.getCustomerspageAdmin);
+    router.get('/accb_food.vn/admin/drivers', homeController.getDriverspageAdmin);
+    router.get('/accb_food.vn/admin/edit_user', homeController.getEditUserpageAdmin);
+    router.get('/accb_food.vn/admin/employees', homeController.getEmployeespageAdmin);
+    router.get('/accb_food.vn/admin/list_lock', homeController.getListLockpageAdmin);
+    router.get('/accb_food.vn/admin/partners', homeController.getPartnerspageAdmin);
+    router.get('/accb_food.vn/admin/user_profile', homeController.getUserProfilepageAdmin);
 
     //Test========================================================================================================================================================================================
     router.post('/sign_up1', homeController.createSign_up);

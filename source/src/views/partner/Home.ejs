@@ -45,17 +45,14 @@
 
     <section>
       <div class="slide">
-        <img src="/images/pic/Slide 1.png" alt="" />
+        <img src="/images/pic/Slide 1.png" alt=""/>
         <div class="left_slide">
-          <span>Delicious</span>
-          <span>Quench the Hunger</span>
-          <span
-            >Lorem ipsum dolor sit amet consectetur, adipisicing elit. Suscipit,
-            nesciunt accusamus hic iusto et quam ex fuga veniam qui ipsa non
-            beatae voluptatum voluptate recusandae dignissimos labore vel alias
-            inventore!
+          <span><%=dataFoods[0].MAN_TEN%></span>
+  
+          <span>
+            <%=dataFoods[0].MAN_MIEUTA%>
           </span>
-          <!-- <button>Order now!</button> -->
+        
         </div>
       </div>
     </section>
@@ -72,47 +69,47 @@
           <span>TODAY’S SPECIALITY</span>
         </div>
         <div class="menu_list_dishes">
-          <div class="menu_tag_dishes">
-            <div class="menu_top_tag_dishes">
-              <div class="menu_detail_icon">
-                <i class="fa-regular fa-eye"></i>
-              </div>
-              <div class="menu_detail_icon">
-                <i class="fa-solid fa-xmark"></i>
-              </div>
-            </div>
-            <img src="/images/foods/dish-1.png" alt="" />
-            <div class="menu_bottom_tag_dishes">
-              <div class="menu_details">
-                <div class="menu_stars">
-                  <div>
-                    <i class="fa-regular fa-star"></i>
-                    <i class="fa-regular fa-star"></i>
-                    <i class="fa-regular fa-star"></i>
-                    <i class="fa-regular fa-star"></i>
-                    <i class="fa-regular fa-star"></i>
-                  </div>
-                  <span>Out of stock</span>
+
+           <% for(let i =0; i<dataFoods.length ;i++){ %>
+            <div class="menu_tag_dishes">
+              <div class="menu_top_tag_dishes">
+                <div class="menu_detail_icon">
+                  <i class="fa-regular fa-eye"></i>
                 </div>
-                <span class="menu_name_food"> Delicious Food </span>
-                <span
-                  >Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                  Pariatur, cumque possimus ut hic commodi rem laborum culpa et
-                  dolore maiores, aut esse odit consectetur adipisci labore vero
-                  autem ipsam debitis.
-                </span>
+                <div class="menu_detail_icon">
+                  <i class="fa-solid fa-xmark"></i>
+                </div>
               </div>
-              <div class="btn_bottom">
-                <button>
-                  <i class="fa-solid fa-minus"></i>
-                </button>
-                <span class="price">$ <span>15,99</span></span>
-                <button>
-                  <i class="fa-solid fa-plus"></i>
-                </button>
+              <img src="<%= dataFoods[i].MAN_IMGPATH %>" alt="" width="200px" height="150px">
+              <div class="menu_bottom_tag_dishes">
+                <div class="menu_details">
+                  <div class="menu_stars">
+                    <div>
+                      <i class="fa-regular fa-star"></i>
+                      <i class="fa-regular fa-star"></i>
+                      <i class="fa-regular fa-star"></i>
+                      <i class="fa-regular fa-star"></i>
+                      <i class="fa-regular fa-star"></i>
+                    </div>
+                    <span><%=dataFoods[i].MAN_TINHTRANG%></span>
+                  </div>
+                  <span class="menu_name_food"> <%=dataFoods[i].MAN_TEN%> </span>
+                  <span>
+                    <%=dataFoods[i].MAN_MIEUTA%>
+                  </span>
+                </div>
+                <div class="btn_bottom">
+                  <button>
+                    <i class="fa-solid fa-minus"></i>
+                  </button>
+                  <span class="price">$ <span><%=dataFoods[i].MAN_GIA%></span></span>
+                  <button>
+                    <i class="fa-solid fa-plus"></i>
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
+          <%}%>
         </div>
       </div>
     </section>
@@ -130,27 +127,8 @@
         </div>
 
         <div class="branch_list">
-          <div class="branch_tag">
-            <div class="left_tag">
-              <img
-                src="/images/pic/Lovepik_com-401432553-building.png"
-                alt=""
-              />
-            </div>
-            <div class="right_tag">
-              <span>Branch 1</span>
-              <span
-                >Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                Reiciendis in omnis blanditiis consequatur officiis labore
-                voluptates sapiente itaque expedita asperiores provident facilis
-                at, ipsam officia nulla quos. Qui, unde reprehenderit.
-              </span>
-              <div class="right_cart-button">
-                <button>Details</button>
-              </div>
-            </div>
-          </div>
 
+          <% for(let i=0; i<dataBranch.lenght; i++){ %>
           <div class="branch_tag">
             <div class="left_tag">
               <img
@@ -159,18 +137,17 @@
               />
             </div>
             <div class="right_tag">
-              <span>Branch 1</span>
-              <span
-                >Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                Reiciendis in omnis blanditiis consequatur officiis labore
-                voluptates sapiente itaque expedita asperiores provident facilis
-                at, ipsam officia nulla quos. Qui, unde reprehenderit.
+              <span><%dataBranch[i].CN_TEN%></span>
+              <span>
+
               </span>
               <div class="right_cart-button">
                 <button>Details</button>
               </div>
             </div>
           </div>
+          <%}%>
+          
         </div>
       </div>
     </section>

@@ -337,40 +337,30 @@ let updateQuantity = async (req, res) => {
 //Partner=========================================================================================================================================================================================
 let getHomepageDoitac = async (req, res) => {
     if (req.session.partner) {
-        let data_contracts = [];
+        let data_branchs = [];
         let data_stores = [];
-        let data_orderforms = [];
-        let data_orderforms_situation = [];
-        let data_menus = [];
         let data_foods = [];
         try {
             await pool.connect();
-            // Contracts
-            let contracts = await pool.request().query('select * from HOPDONG')
-            data_contracts = contracts.recordset;
             // Store
-            let stores = await pool.request().query('select * from CUAHANG')
+            let stores = await pool.request().query(`exec sp_dscuahangdoitac '${req.session.partner[0].DT_MA}'`);
             data_stores = stores.recordset;
-            // Order form
-            let order_forms = await pool.request().query('select * from DONHANG')
-            data_orderforms = order_forms.recordset;
-            // Order form situation
-            let order_forms_situation = await pool.request().query('select * from TINHTRANGGIAOHANG')
-            data_orderforms_situation = order_forms_situation.recordset;
-            // Menu
-            let menus = await pool.request().query('select * from THUCDON')
-            data_menus = menus.recordset;
+            // Branch
+            for(let i=0; i<data_stores.length;i++){
+                let branch = await pool.request().query(`exec sp_chinhanhcuahangdoitac '${req.session.partner[0].DT_MA}','${data_stores[i].CH_MA}'`);
+                data_branchs.push(branch.recordset[0]);
+            }
             // Food
-            let foods = await pool.request().query('select * from MONAN')
-            data_menus = foods.recordset;
+            for(let i=0; i<data_stores.length;i++){
+                let foods = await pool.request().query(`exec sp_monancuacuahangdoitac '${req.session.partner[0].DT_MA}','${data_stores[i].CH_MA}'`)
+                data_foods.push(foods.recordset[0]);
+            }
 
-            return res.render('partner.ejs', {
+            //
+            return res.render('./partner/Home.ejs', {
                 dataPartner: req.session.partner,
-                dataContracts: data_contracts,
                 dataStores: data_stores,
-                dataOrderForms: data_orderforms,
-                dataOrderFormsSituation: data_orderforms_situation,
-                dataMenus: data_menus,
+                dataBranch: data_branchs,
                 dataFoods: data_foods
             });
         }
@@ -384,6 +374,50 @@ let getHomepageDoitac = async (req, res) => {
     else {
         return res.redirect('/');
     }
+}
+//
+let getSignUpDT = async (req, res) => {
+    return res.render('./partner/sign_up.ejs');
+}
+//
+let getMenupageDT = async (req, res) => {
+    return res.render('./partner/Menu.ejs');
+}
+//
+let getAddFoodDT = async (req, res) => {
+    return res.render('./partner/AddFood.ejs');
+}
+//
+let getBranchpageDT = async (req, res) => {
+    return res.render('./partner/Branch.ejs');
+}
+//
+let getContractDetailpageDT = async (req, res) => {
+    return res.render('./partner/ContractDetails.ejs');
+}
+//
+let getFoodDetailpageDT = async (req, res) => {
+    return res.render('./partner/fooddetail.ejs');
+}
+//
+let getOrderspageDT = async (req, res) => {
+    return res.render('./partner/orders.ejs');
+}
+//
+let getOrdersDetailpageDT = async (req, res) => {
+    return res.render('./partner/OrsersDetails.ejs');
+}
+//
+let getPartContractspageDT = async (req, res) => {
+    return res.render('./partner/PartContract.ejs');
+}
+//
+let getRenewContractpageDT = async (req, res) => {
+    return res.render('./partner/RenewContract.ejs');
+}
+//
+let getShoppageDT = async (req, res) => {
+    return res.render('./partner/shop.ejs');
 }
 //Driver==========================================================================================================================================================================================
 let getHomepageDriver = async (req, res) => {
@@ -410,6 +444,26 @@ let getHomepageDriver = async (req, res) => {
     else {
         return res.redirect('/')
     }
+}
+//
+let getProfilepageDriver = async (req, res) => {
+    return res.render('./driver/info.ejs');
+}
+//
+let getOrderspageDriver = async (req, res) => {
+    return res.render('./driver/orders.ejs');
+}
+//
+let getOrdersDetailpageDriver = async (req, res) => {
+    return res.render('./driver/OrdersDetail.ejs');
+}
+//
+let getSignUppageDriver = async (req, res) => {
+    return res.render('./driver/signup.ejs');
+}
+//
+let getWalletpageDriver = async (req, res) => {
+    return res.render('./driver/Wallet.ejs');
 }
 //Agent===========================================================================================================================================================================================
 let getHomepageNhanvien = async (req, res) => {
@@ -442,6 +496,26 @@ let getHomepageNhanvien = async (req, res) => {
         return res.redirect('/');
     }
 }
+//
+let getContractDetailpageNhanvien = async (req, res) => {
+    return res.render('./agent/ContracDetails.ejs');
+}
+//
+let getEmployeeContractpageNhanvien = async (req, res) => {
+    return res.render('./agent/EmployeeContact.ejs');
+}
+//
+let getEmployeePartnerpageNhanvien = async (req, res) => {
+    return res.render('./agent/EmployeePartner.ejs');
+}
+//
+let getProfilepageNhanvien = async (req, res) => {
+    return res.render('./agent/info.ejs');
+}
+//
+let getNotifypageNhanvien = async (req, res) => {
+    return res.render('./agent/Notify.ejs');
+}
 //Admin===========================================================================================================================================================================================
 let getHomepageAdmin = async (req, res) => {
     if (req.session.admin) {
@@ -464,7 +538,7 @@ let getHomepageAdmin = async (req, res) => {
             let partners = await pool.request().query('select * from DOITAC')
             data_partners = partners.recordset;
 
-            return res.render('admin.ejs', {
+            return res.render('./admin/Home.ejs', {
                 dataAdmin: req.session.admin,
                 dataDrivers: data_drivers,
                 dataUsers: data_users,
@@ -483,7 +557,42 @@ let getHomepageAdmin = async (req, res) => {
         return res.redirect('/');
     }
 }
-
+//
+let getAddUserpageAdmin = async (req, res) => {
+    return res.render('./admin/AddUser.ejs');
+}
+//
+let getAdminspageAdmin = async (req, res) => {
+    return res.render('./admin/admin.ejs');
+}
+//
+let getCustomerspageAdmin = async (req, res) => {
+    return res.render('./admin/Customer.ejs');
+}
+//
+let getDriverspageAdmin = async (req, res) => {
+    return res.render('./admin/Driver.ejs');
+}
+//
+let getEditUserpageAdmin = async (req, res) => {
+    return res.render('./admin/EditUser.ejs');
+}
+//
+let getEmployeespageAdmin = async (req, res) => {
+    return res.render('./admin/employee.ejs');
+}
+//
+let getListLockpageAdmin = async (req, res) => {
+    return res.render('./admin/ListLock.ejs');
+}
+//
+let getPartnerspageAdmin = async (req, res) => {
+    return res.render('./admin/partner.ejs');
+}
+//
+let getUserProfilepageAdmin = async (req, res) => {
+    return res.render('./admin/UserInfo.ejs');
+}
 //Test============================================================================================================================================================================================
 let createSign_up = (req, res) => {
     console.log("check req : ", req.body)
@@ -513,6 +622,36 @@ module.exports = {
     getOrderpage,
     getAddtoCart,
     updateQuantity,
+    getSignUpDT,
+    getMenupageDT,
+    getAddFoodDT,
+    getBranchpageDT,
+    getContractDetailpageDT,
+    getFoodDetailpageDT,
+    getOrderspageDT,
+    getOrdersDetailpageDT,
+    getPartContractspageDT,
+    getRenewContractpageDT,
+    getShoppageDT,
+    getProfilepageDriver,
+    getOrderspageDriver,
+    getOrdersDetailpageDriver,
+    getSignUppageDriver,
+    getWalletpageDriver,
+    getContractDetailpageNhanvien,
+    getEmployeeContractpageNhanvien,
+    getEmployeePartnerpageNhanvien,
+    getProfilepageNhanvien,
+    getNotifypageNhanvien,
+    getAddUserpageAdmin,
+    getAdminspageAdmin,
+    getCustomerspageAdmin,
+    getDriverspageAdmin,
+    getEditUserpageAdmin,
+    getEmployeespageAdmin,
+    getListLockpageAdmin,
+    getPartnerspageAdmin,
+    getUserProfilepageAdmin,
     createSign_up,
     getTest
 }
