@@ -246,16 +246,43 @@ let getFoodDetailpage = (req, res) => {
 }
 //
 let getOrderpage = async (req, res) => {
-    let { pay, address, note } = req.body;
-    if(req.body && req.session.user){
-        let { pay, address, note} = req.body;
+    if(req.session.user){
+        let data_orders=[];
         await pool.connect();
-        await pool.request().query(`exec SP_KHDATHANG 'KH_1',N'Thanh toán khi nhận hàng'`);
+        let orders = await pool.request().query(`exec sp_XemDanhSachDonHangCuaKhachHang '${req.session.user[0].KH_MA}'`);
+        data_orders=orders.recordset;
+        return res.render('orders.ejs',{
+            dataOrders:data_orders
+        });
     }
     else{
         return res.redirect('/accb_food.vn/cart')
     }
-    return res.render('orders.ejs')
+}
+//
+
+let getProcessOrderpage = async (req, res) => {
+    if(req.body && req.session.user){
+        let { pay} = req.body;
+        await pool.connect();
+        await pool.request().query(`exec SP_KHDATHANG '${req.session.user[0].KH_MA}',N'${pay}'`);
+        return res.redirect('/accb_food.vn/order');
+    }
+    else{
+        return res.redirect('/accb_food.vn/cart')
+    }
+}
+//
+let getProcessCancelOrderpage = async (req, res) => {
+    if(req.body && req.session.user){
+        let id = req.params.id;
+        await pool.connect();
+        await pool.request().query(`UPDATE DONHANG SET DH_TINHTRANG = N'Đã hủy' WHERE DH_MA = '${id}'`);
+        return res.redirect('/accb_food.vn/order');
+    }
+    else{
+        return res.redirect('/accb_food.vn/cart')
+    }
 }
 //
 let getAddtoCart = async (req, res) => {
@@ -631,6 +658,8 @@ module.exports = {
     getCartpage,
     getFoodDetailpage,
     getOrderpage,
+    getProcessOrderpage,
+    getProcessCancelOrderpage,
     getAddtoCart,
     updateQuantity,
     getSignUpDT,

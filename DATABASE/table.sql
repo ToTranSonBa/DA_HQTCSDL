@@ -1013,22 +1013,19 @@ begin tran
 commit TRAN
 GO 
 
---hủy đơn hàng mà khách hàng muốn hủy
+--hủy đơn hàng mà khách hàng muốn hủy\
+
 create proc sp_huyDonHang
 	@madh char(10)
 as
 begin tran
 	begin try
-		if not exists (select * 
-					from DONHANG dh
-					where dh.DH_MA = @madh)
+		if not exists (select * from DONHANG dh where dh.DH_MA = @madh)
 		begin
 			print N'Đơn hàng ' + @madh + N' không tồn tại'
 			rollback tran
 		end
-		if not exists (select * 
-					from DONHANG dh
-					where dh.DH_MA = @madh AND dh.DH_TINHTRANG = N'Chưa xác nhận')
+		if not exists (select * from DONHANG dh where dh.DH_MA = @madh AND dh.DH_TINHTRANG = N'Chưa xác nhận')
 		begin
 			print N'Không thể hủy đơn hàng'
 			rollback tran
@@ -1085,9 +1082,7 @@ create proc sp_XemDanhSachDonHangCuaKhachHang
 as
 begin tran
 	begin try
-		if not exists (select * 
-						from KHACHHANG kh
-						where kh.KH_MA = @makh)
+		if not exists (select * from KHACHHANG kh where kh.KH_MA = @makh)
 		begin
 			print N'Khách hàng không tồn tại'
 			rollback tran
@@ -2310,6 +2305,7 @@ VALUES
     )
 	GO
 
+--TEST============================================================================================================
 EXEC dbo.sp_chapnhandonhang @ma = 'DH_4' -- char(10)
 
 select * from TAIKHOAN
@@ -2320,3 +2316,8 @@ select * from KHACHHANG
 
 exec SP_KHDATHANG 'KH_1',N'Thanh toán khi nhận hàng'
 select * from DONHANG
+delete from DONHANG where DH_MA='DH_1'
+select * from GIOHANG where KH_MA='KH_1'
+
+exec sp_huyDonHang 'DH_2'
+exec sp_XemDanhSachDonHangCuaKhachHang 'KH_1'
