@@ -2,7 +2,7 @@ import sql from "mssql/msnodesqlv8";
 
 // database configuration
 const config = {
-    server: 'DUONG-GV62\\SQLEXPRESS',
+    server: 'ADMIN\\SQLEXPRESS',
     //user:'',
     //password:'',
     database: 'DOAN_HQTCSDL',

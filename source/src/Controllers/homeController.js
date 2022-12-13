@@ -265,7 +265,6 @@ let getOrderpage = async (req, res) => {
     }
 }
 //
-
 let getProcessOrderpage = async (req, res) => {
     if (req.body && req.session.user) {
         let { pay } = req.body;
@@ -390,10 +389,8 @@ let createNewUser = async (req, res) => {
     let SONHA = req.body.userAddress;
     let userName = req.body.userName;
     let userPass = req.body.userPassword;
-    console.log(`exec sp_ThemThongTinKhachHang N'${name}','${phone}','${email}',N'${sex}','${MATINH}','${MAHUYEN}','${MAXA}','${SONHA}'`)
-    //await pool.request().query(`exec sp_ThemThongTinKhachHang N'${name}','${phone}','${email}',N'${sex}','${MATINH}','${MAHUYEN}','${MAXA}','${SONHA}'`);
-    //console.log(`exec pr_taoUSER '${userName}','${userPass}','khach hang' `);
-    // await pool.request().query(`exec pr_taoUSER '${userName}','${userPass}','khach hang' `);
+    await pool.request().query(`exec sp_ThemThongTinKhachHang N'${name}','${phone}','${email}',N'${sex}','${MATINH}','${MAHUYEN}','${MAXA}','${SONHA}'`);
+    await pool.request().query(`exec pr_taoUSER '${userName}','${userPass}','KHACHHANG'`);
     return res.send('call post create new user');
 }
 

@@ -757,36 +757,29 @@ PROC sp_ThemThongTinKhachHang
 AS
 BEGIN TRAN
 	BEGIN TRY
-		IF NOT EXISTS (SELECT *
-						FROM DIACHI dc
-						WHERE dc.DC_MATINH = @dc_matinh)
+		IF NOT EXISTS (SELECT * FROM DIACHI dc WHERE dc.DC_MATINH = @dc_matinh)
 		BEGIN 
 			PRINT N'mã tỉnh không tồn tại'
 			ROLLBACK TRAN
 		END
 
-		IF NOT EXISTS (SELECT *
-						FROM DIACHI dc
-						WHERE dc.DC_MAHUYEN = @dc_mahuyen)
+		IF NOT EXISTS (SELECT * FROM DIACHI dc WHERE dc.DC_MAHUYEN = @dc_mahuyen)
 		BEGIN 
 			PRINT N'mã huyện không tồn tại'
 			ROLLBACK TRAN
 		END
 
-		IF NOT EXISTS (SELECT *
-						FROM DIACHI dc
-						WHERE dc.DC_MAXA = @dc_maxa)
+		IF NOT EXISTS (SELECT * FROM DIACHI dc WHERE dc.DC_MAXA = @dc_maxa)
 		BEGIN 
 			PRINT N'mã xã không tồn tại'
 			ROLLBACK TRAN
 		END
 		DECLARE @MAKH CHAR(10)
 		DECLARE @TMP INT
-		SELECT @TMP = COUNT(*) + 1 FROM dbo.KHACHHANG
+		SELECT @TMP = COUNT(*) + 2 FROM dbo.KHACHHANG
 		SET @MAKH = 'KH_' + CAST(@TMP AS CHAR(20));
 
-		INSERT INTO DBO.KHACHHANG
-		VALUES (@MAKH, @tenkh,@sdtkh,@mailkh,@gioitinhkh,null,@dc_matinh,@dc_mahuyen,@dc_maxa, @kh_sonha)
+		INSERT INTO DBO.KHACHHANG VALUES (@MAKH, @tenkh,@sdtkh,@mailkh,@gioitinhkh,null,@dc_matinh,@dc_mahuyen,@dc_maxa, @kh_sonha)
 	END TRY
 	BEGIN CATCH
 		PRINT N'lỗi hệ thống'
@@ -794,9 +787,6 @@ BEGIN TRAN
 	END CATCH
 COMMIT TRAN
 GO
-
-exec sp_ThemThongTinKhachHang N'nguyễn văn a','0123456789','nguyenvana@gmail',N'Nam','11','1','101','123a'
-
 
 create proc sp_CapNhatThongTinKhachHang
 	@makh CHAR(10),
@@ -2153,10 +2143,11 @@ go
 --xu ly đăng ký
 create 
 --alter
+--drop
 proc pr_taoUSER
-	@user char(50),
-	@password char(50),
-	@loaitk CHAR(50)
+	@user char(20),
+	@password char(10),
+	@loaitk CHAR(10)
 as
 begin transaction
 	begin try
@@ -2175,16 +2166,12 @@ begin transaction
 			rollback transaction
 			return
 		end
-		declare @ma char
-		if(@loaitk = 'Khach hang')
+		declare @ma char(10)
+		if(@loaitk = 'KHACHHANG')
 		begin
-			select @ma = 'KH_' + cast((count(tk.MA)+1) as char(4))
-			from TAIKHOAN tk
-			where tk.MA like'KH_%'
+			select @ma = 'KH_' + cast((count(tk.MA)+1) as char(10)) from TAIKHOAN tk where tk.MA like'KH_%'
 		end
-
-		insert into TAIKHOAN values(@ma,@user,@password,@loaitk)
-
+		insert into TAIKHOAN values(@ma,'20120430','1234','KHACHHANG')
 
 	end try
 	begin catch 
