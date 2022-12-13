@@ -49,20 +49,20 @@ const initWebRoute = (app) => {
     router.get('/accb_food.vn/order', homeController.getOrderpage);
     router.get('/accb_food.vn/addto_cart/id/:id', homeController.getAddtoCart);
     router.get('/accb_food.vn/cart/quantity/:operator/id/:id', homeController.updateQuantity);
-
+    router.post('/sign_upUser', homeController.createNewUser)
     //Route of Partner============================================================================================================================================================================
     router.get('/accb_food.vn/doitac', homeController.getHomepageDoitac);
     router.get('/accb_food.vn/doitac/sign_up', homeController.getSignUpDT);
-    router.get('/accb_food.vn/doitac/menu',homeController.getMenupageDT);
-    router.get('/accb_food.vn/doitac/add_food',homeController.getAddFoodDT);
-    router.get('/accb_food.vn/doitac/branch',homeController.getBranchpageDT);
-    router.get('/accb_food.vn/doitac/contract_detail',homeController.getContractDetailpageDT);
-    router.get('/accb_food.vn/doitac/food_detail',homeController.getFoodDetailpageDT);
-    router.get('/accb_food.vn/doitac/orders',homeController.getOrderspageDT);
-    router.get('/accb_food.vn/doitac/orders_detail',homeController.getOrdersDetailpageDT);
-    router.get('/accb_food.vn/doitac/part_contracts',homeController.getPartContractspageDT);
-    router.get('/accb_food.vn/doitac/renew_contract',homeController.getRenewContractpageDT);
-    router.get('/accb_food.vn/doitac/shop',homeController.getShoppageDT);
+    router.get('/accb_food.vn/doitac/menu', homeController.getMenupageDT);
+    router.get('/accb_food.vn/doitac/add_food', homeController.getAddFoodDT);
+    router.get('/accb_food.vn/doitac/branch', homeController.getBranchpageDT);
+    router.get('/accb_food.vn/doitac/contract_detail', homeController.getContractDetailpageDT);
+    router.get('/accb_food.vn/doitac/food_detail', homeController.getFoodDetailpageDT);
+    router.get('/accb_food.vn/doitac/orders', homeController.getOrderspageDT);
+    router.get('/accb_food.vn/doitac/orders_detail', homeController.getOrdersDetailpageDT);
+    router.get('/accb_food.vn/doitac/part_contracts', homeController.getPartContractspageDT);
+    router.get('/accb_food.vn/doitac/renew_contract', homeController.getRenewContractpageDT);
+    router.get('/accb_food.vn/doitac/shop', homeController.getShoppageDT);
 
     //Route of Driver=============================================================================================================================================================================
     router.get('/accb_food.vn/taixe', homeController.getHomepageDriver);
@@ -93,8 +93,6 @@ const initWebRoute = (app) => {
     router.get('/accb_food.vn/admin/user_profile', homeController.getUserProfilepageAdmin);
 
     //Test========================================================================================================================================================================================
-    router.post('/sign_up1', homeController.createSign_up);
-    router.get('/test', homeController.getTest);
 
     //============================================================================================================================================================================================
     return app.use('/', router);

@@ -786,7 +786,7 @@ BEGIN TRAN
 		SET @MAKH = 'KH_' + CAST(@TMP AS CHAR(20));
 
 		INSERT INTO DBO.KHACHHANG
-		VALUES (@MAKH, @tenkh,@sdtkh,@mailkh,@gioitinhkh,@dc_matinh,@dc_mahuyen,@dc_maxa, @kh_sonha)
+		VALUES (@MAKH, @tenkh,@sdtkh,@mailkh,@gioitinhkh,null,@dc_matinh,@dc_mahuyen,@dc_maxa, @kh_sonha)
 	END TRY
 	BEGIN CATCH
 		PRINT N'lỗi hệ thống'
@@ -794,6 +794,8 @@ BEGIN TRAN
 	END CATCH
 COMMIT TRAN
 GO
+
+exec sp_ThemThongTinKhachHang N'nguyễn văn a','0123456789','nguyenvana@gmail',N'Nam','11','1','101','123a'
 
 
 create proc sp_CapNhatThongTinKhachHang
@@ -2173,6 +2175,15 @@ begin transaction
 			rollback transaction
 			return
 		end
+		declare @ma char
+		if(@loaitk = 'Khach hang')
+		begin
+			select @ma = 'KH_' + cast((count(tk.MA)+1) as char(4))
+			from TAIKHOAN tk
+			where tk.MA like'KH_%'
+		end
+
+		insert into TAIKHOAN values(@ma,@user,@password,@loaitk)
 
 
 	end try
@@ -2225,9 +2236,9 @@ VALUES
 
 
 insert into KHACHHANG values('KH_1', N'Nguyễn A','0395639633','abc@gmail',N'Nam','/images/profile pic/pic-1.png','11','1','101', NULL);
-insert into KHACHHANG values('KH_3', N'Nguyễn C','0395639612','abc2@gmail',N'Nữ','/images/profile pic/pic-2.png','70','51','501', NULL);
-insert into KHACHHANG values('KH_4', N'Nguyễn D','0395639613','abc3@gmail',N'Nam','/images/profile pic/pic-3.png','11','1','101', NULL);
-insert into KHACHHANG values('KH_5', N'Nguyễn E','0395639614','abc4@gmail',N'Nữ','/images/profile pic/pic-4.png','59','81','1001', NULL);
+insert into KHACHHANG values('KH_2', N'Nguyễn C','0395639612','abc2@gmail',N'Nữ','/images/profile pic/pic-2.png','70','51','501', NULL);
+insert into KHACHHANG values('KH_3', N'Nguyễn D','0395639613','abc3@gmail',N'Nam','/images/profile pic/pic-3.png','11','1','101', NULL);
+insert into KHACHHANG values('KH_4', N'Nguyễn E','0395639614','abc4@gmail',N'Nữ','/images/profile pic/pic-4.png','59','81','1001', NULL);
 
 insert into DOITAC values('DT_1',N'Nguyễn Văn F','0395639615','ab5c@gmail.com');
 insert into DOITAC values('DT_2',N'Nguyễn Văn G','0395639616','abc6@gmail.com');

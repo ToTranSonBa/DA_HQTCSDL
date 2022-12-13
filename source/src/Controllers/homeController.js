@@ -1,6 +1,7 @@
 import pool from "../configs/connectDB";
 import multer from 'multer';
 import session from "express-session";
+import { response } from "express";
 //User============================================================================================================================================================================================
 let getHomepage = async (req, res) => {
     let data_foods = [];
@@ -43,8 +44,12 @@ let getSignIn = (req, res) => {
     return res.render('sign_in.ejs')
 }
 //
-let getSignUp = (req, res) => {
-    return res.render('sign_up.ejs')
+let getSignUp = async (req, res) => {
+    await pool.connect();
+    let data_conscious = [];
+    let conscious = await pool.request().query('select *  from DIACHI ');
+    data_conscious = conscious.recordset;
+    return res.render('sign_up.ejs', { dataConscious: data_conscious });
 }
 //
 let getHomepageUser = async (req, res) => {
@@ -246,41 +251,41 @@ let getFoodDetailpage = (req, res) => {
 }
 //
 let getOrderpage = async (req, res) => {
-    if(req.session.user){
-        let data_orders=[];
+    if (req.session.user) {
+        let data_orders = [];
         await pool.connect();
         let orders = await pool.request().query(`exec sp_XemDanhSachDonHangCuaKhachHang '${req.session.user[0].KH_MA}'`);
-        data_orders=orders.recordset;
-        return res.render('orders.ejs',{
-            dataOrders:data_orders
+        data_orders = orders.recordset;
+        return res.render('orders.ejs', {
+            dataOrders: data_orders
         });
     }
-    else{
+    else {
         return res.redirect('/accb_food.vn/cart')
     }
 }
 //
 
 let getProcessOrderpage = async (req, res) => {
-    if(req.body && req.session.user){
-        let { pay} = req.body;
+    if (req.body && req.session.user) {
+        let { pay } = req.body;
         await pool.connect();
         await pool.request().query(`exec SP_KHDATHANG '${req.session.user[0].KH_MA}',N'${pay}'`);
         return res.redirect('/accb_food.vn/order');
     }
-    else{
+    else {
         return res.redirect('/accb_food.vn/cart')
     }
 }
 //
 let getProcessCancelOrderpage = async (req, res) => {
-    if(req.body && req.session.user){
+    if (req.body && req.session.user) {
         let id = req.params.id;
         await pool.connect();
         await pool.request().query(`UPDATE DONHANG SET DH_TINHTRANG = N'Đã hủy' WHERE DH_MA = '${id}'`);
         return res.redirect('/accb_food.vn/order');
     }
-    else{
+    else {
         return res.redirect('/accb_food.vn/cart')
     }
 }
@@ -290,7 +295,7 @@ let getAddtoCart = async (req, res) => {
         let data_foods = []
         try {
             await pool.connect();
-            let food=await pool.request().query(`select * from MONAN where MAN_MA=${req.params.id}`);
+            let food = await pool.request().query(`select * from MONAN where MAN_MA=${req.params.id}`);
             // Them vao gio hang
             let count = await pool.request().query(`select count(*) as count from GIOHANG`);
             if (count.recordset[0].count == 0) {
@@ -372,6 +377,26 @@ let updateQuantity = async (req, res) => {
         return res.redirect('/accb_food.vn');
     }
 }
+
+let createNewUser = async (req, res) => {
+    await pool.connect();
+    let name = req.body.name;
+    let sex = req.body.userSex;
+    let email = req.body.userEmail;
+    let phone = req.body.userPhoneNumber;
+    let MATINH = req.body.DC_MATINH.trim();
+    let MAHUYEN = req.body.DC_MAHUYEN.trim();
+    let MAXA = req.body.DC_MAXA.trim();
+    let SONHA = req.body.userAddress;
+    let userName = req.body.userName;
+    let userPass = req.body.userPassword;
+    console.log(`exec sp_ThemThongTinKhachHang N'${name}','${phone}','${email}',N'${sex}','${MATINH}','${MAHUYEN}','${MAXA}','${SONHA}'`)
+    //await pool.request().query(`exec sp_ThemThongTinKhachHang N'${name}','${phone}','${email}',N'${sex}','${MATINH}','${MAHUYEN}','${MAXA}','${SONHA}'`);
+    //console.log(`exec pr_taoUSER '${userName}','${userPass}','khach hang' `);
+    // await pool.request().query(`exec pr_taoUSER '${userName}','${userPass}','khach hang' `);
+    return res.send('call post create new user');
+}
+
 //Partner=========================================================================================================================================================================================
 let getHomepageDoitac = async (req, res) => {
     if (req.session.partner) {
@@ -384,12 +409,12 @@ let getHomepageDoitac = async (req, res) => {
             let stores = await pool.request().query(`exec sp_dscuahangdoitac '${req.session.partner[0].DT_MA}'`);
             data_stores = stores.recordset;
             // Branch
-            for(let i=0; i<data_stores.length;i++){
+            for (let i = 0; i < data_stores.length; i++) {
                 let branch = await pool.request().query(`exec sp_chinhanhcuahangdoitac '${req.session.partner[0].DT_MA}','${data_stores[i].CH_MA}'`);
                 data_branchs.push(branch.recordset[0]);
             }
             // Food
-            for(let i=0; i<data_stores.length;i++){
+            for (let i = 0; i < data_stores.length; i++) {
                 let foods = await pool.request().query(`exec sp_monancuacuahangdoitac '${req.session.partner[0].DT_MA}','${data_stores[i].CH_MA}'`)
                 data_foods.push(foods.recordset[0]);
             }
@@ -632,13 +657,9 @@ let getUserProfilepageAdmin = async (req, res) => {
     return res.render('./admin/UserInfo.ejs');
 }
 //Test============================================================================================================================================================================================
-let createSign_up = (req, res) => {
-    console.log("check req : ", req.body)
-    return res.send('call post create new user')
-}
-//
+
 let getTest = (req, res) => {
-    return res.render('./partner/Home.ejs');
+    return res.render('asadsadsad');
 }
 
 //
@@ -692,6 +713,6 @@ module.exports = {
     getListLockpageAdmin,
     getPartnerspageAdmin,
     getUserProfilepageAdmin,
-    createSign_up,
+    createNewUser,
     getTest
 }
