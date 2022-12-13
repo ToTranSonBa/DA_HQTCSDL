@@ -2171,7 +2171,7 @@ begin transaction
 		begin
 			select @ma = 'KH_' + cast((count(tk.MA)+1) as char(10)) from TAIKHOAN tk where tk.MA like'KH_%'
 		end
-		insert into TAIKHOAN values(@ma,'20120430','1234','KHACHHANG')
+		insert into TAIKHOAN values(@ma,@user,@password,@loaitk)
 
 	end try
 	begin catch 
@@ -2319,3 +2319,4 @@ select * from GIOHANG where KH_MA='KH_1'
 
 exec sp_huyDonHang 'DH_2'
 exec sp_XemDanhSachDonHangCuaKhachHang 'KH_1'
+

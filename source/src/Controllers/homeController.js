@@ -391,7 +391,7 @@ let createNewUser = async (req, res) => {
     let userPass = req.body.userPassword;
     await pool.request().query(`exec sp_ThemThongTinKhachHang N'${name}','${phone}','${email}',N'${sex}','${MATINH}','${MAHUYEN}','${MAXA}','${SONHA}'`);
     await pool.request().query(`exec pr_taoUSER '${userName}','${userPass}','KHACHHANG'`);
-    return res.send('call post create new user');
+    return res.redirect('/sign_in');
 }
 
 //Partner=========================================================================================================================================================================================
