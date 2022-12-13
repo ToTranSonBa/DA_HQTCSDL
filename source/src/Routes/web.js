@@ -55,7 +55,7 @@ const initWebRoute = (app) => {
     router.get('/accb_food.vn/doitac/sign_up', homeController.getSignUpDT);
     router.get('/accb_food.vn/doitac/menu', homeController.getMenupageDT);
     router.get('/accb_food.vn/doitac/add_food', homeController.getAddFoodDT);
-    router.get('/accb_food.vn/doitac/branch', homeController.getBranchpageDT);
+    router.get('/accb_food.vn/doitac/branch/id/:id', homeController.getBranchpageDT);
     router.get('/accb_food.vn/doitac/contract_detail', homeController.getContractDetailpageDT);
     router.get('/accb_food.vn/doitac/food_detail', homeController.getFoodDetailpageDT);
     router.get('/accb_food.vn/doitac/orders', homeController.getOrderspageDT);

@@ -393,7 +393,6 @@ let createNewUser = async (req, res) => {
     await pool.request().query(`exec pr_taoUSER '${userName}','${userPass}','KHACHHANG'`);
     return res.redirect('/sign_in');
 }
-
 //Partner=========================================================================================================================================================================================
 let getHomepageDoitac = async (req, res) => {
     if (req.session.partner) {
@@ -415,7 +414,6 @@ let getHomepageDoitac = async (req, res) => {
                 let foods = await pool.request().query(`exec sp_monancuacuahangdoitac '${req.session.partner[0].DT_MA}','${data_stores[i].CH_MA}'`)
                 data_foods.push(foods.recordset[0]);
             }
-
             //
             return res.render('./partner/Home.ejs', {
                 dataPartner: req.session.partner,
@@ -437,7 +435,7 @@ let getHomepageDoitac = async (req, res) => {
 }
 //
 let getSignUpDT = async (req, res) => {
-    return res.render('./partner/sign_up.ejs');
+    return res.render('./partner/signup.ejs');
 }
 //
 let getMenupageDT = async (req, res) => {
@@ -465,7 +463,7 @@ let getOrderspageDT = async (req, res) => {
 }
 //
 let getOrdersDetailpageDT = async (req, res) => {
-    return res.render('./partner/OrsersDetails.ejs');
+    return res.render('./partner/OrdersDetails.ejs');
 }
 //
 let getPartContractspageDT = async (req, res) => {
