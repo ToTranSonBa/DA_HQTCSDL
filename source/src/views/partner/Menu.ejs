@@ -30,6 +30,10 @@
           </li>
 
           <li class="Navbar-Directory-item">
+            <a href="/accb_food.vn/doitac/menu" id="GFG">Menu</a>
+          </li>
+
+          <li class="Navbar-Directory-item">
             <a href="/accb_food.vn/doitac/shop" id="GFG">Shop</a>
           </li>
 
@@ -83,51 +87,45 @@
             <span>TODAY’S SPECIALITY</span>
           </div>
           <div class="list_dishes">
-            <div class="tag_dishes">
-              <div class="top_tag_dishes">
-                <div class="detail_icon">
-                  <i class="fa-regular fa-eye"></i>
-                </div>
-                <div class="detail_icon">
-                  <i class="fa-solid fa-xmark"></i>
-                </div>
-              </div>
-              <img src="/images/foods/dish-1.png" alt="" />
-              <div class="bottom_tag_dishes">
-                <div class="stars">
-                  <div>
-                    <i class="fa-regular fa-star"></i>
-                    <i class="fa-regular fa-star"></i>
-                    <i class="fa-regular fa-star"></i>
-                    <i class="fa-regular fa-star"></i>
-                    <i class="fa-regular fa-star"></i>
+            <% for(let i=0; i<dataFoodsofStore.length; i++){ %>
+              <div class="tag_dishes">
+                <div class="top_tag_dishes">
+                  <div class="detail_icon">
+                    <i class="fa-regular fa-eye"></i>
+                  </div>
+                  <div class="detail_icon">
+                    <i class="fa-solid fa-xmark"></i>
                   </div>
                 </div>
-                <div class="details">
-                  <span class="name_food"> Delicious Food </span>
-                  <span
-                    >Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                    Impedit voluptatibus veritatis nisi atque magnam amet
-                    ducimus dicta neque ad, non placeat quos. Cum id nisi
-                    repellendus consequatur voluptate, commodi reprehenderit!
-                  </span>
-                </div>
-                <div class="btn_bottom">
-                  <button>
-                    <i class="fa-solid fa-minus"></i>
-                  </button>
-                  <span class="price">$ <span>15,99</span></span>
-                  <button>
-                    <i class="fa-solid fa-plus"></i>
-                  </button>
+                <img src="<%=dataFoodsofStore[i].MAN_IMGPATH%>" alt="" width="200px" height="150px"/>
+                <div class="bottom_tag_dishes">
+                  <div class="stars">
+                    <div>
+                      <i class="fa-regular fa-star"></i>
+                      <i class="fa-regular fa-star"></i>
+                      <i class="fa-regular fa-star"></i>
+                      <i class="fa-regular fa-star"></i>
+                      <i class="fa-regular fa-star"></i>
+                    </div>
+                  </div>
+                  <div class="details">
+                    <span class="name_food"> <%=dataFoodsofStore[i].MAN_TEN%> </span>
+                    <span>
+                      <%=dataFoodsofStore[i].MAN_MIEUTA%>
+                    </span>
+                  </div>
+                  <div class="btn_bottom">
+                    <span class="price">$ <span><%=dataFoodsofStore[i].MAN_GIA%></span></span>
+                  </div>
                 </div>
               </div>
-            </div>
-
+            <% } %>
             <div class="add_dishes">
-              <button>
-                <i class="fa-solid fa-plus"></i>
-              </button>
+              <form action="/accb_food.vn/doitac/add_food">
+                <button>
+                  <i class="fa-solid fa-plus"></i>
+                </button>
+              </form>
             </div>
           </div>
         </div>

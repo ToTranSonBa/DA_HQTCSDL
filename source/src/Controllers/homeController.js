@@ -404,16 +404,13 @@ let getHomepageDoitac = async (req, res) => {
             // Store
             let stores = await pool.request().query(`exec sp_dscuahangdoitac '${req.session.partner[0].DT_MA}'`);
             data_stores = stores.recordset;
+            req.session.store=data_stores
             // Branch
-            for (let i = 0; i < data_stores.length; i++) {
-                let branch = await pool.request().query(`exec sp_chinhanhcuahangdoitac '${req.session.partner[0].DT_MA}','${data_stores[i].CH_MA}'`);
-                data_branchs.push(branch.recordset[0]);
-            }
+            let branch = await pool.request().query(`exec sp_chinhanhcuadoitac '${req.session.partner[0].DT_MA}','${data_stores[0].CH_MA}'`);
+            data_branchs=branch.recordset;
             // Food
-            for (let i = 0; i < data_stores.length; i++) {
-                let foods = await pool.request().query(`exec sp_monancuacuahangdoitac '${req.session.partner[0].DT_MA}','${data_stores[i].CH_MA}'`)
-                data_foods.push(foods.recordset[0]);
-            }
+            let foods = await pool.request().query(`exec sp_monancuacuahang '${req.session.partner[0].DT_MA}','${data_stores[0].CH_MA}'`)
+            data_foods=foods.recordset;
             //
             return res.render('./partner/Home.ejs', {
                 dataPartner: req.session.partner,
@@ -439,7 +436,18 @@ let getSignUpDT = async (req, res) => {
 }
 //
 let getMenupageDT = async (req, res) => {
-    return res.render('./partner/Menu.ejs');
+    if(req.session.partner&&req.session.store){
+        let foods_of_store=[];
+        await pool.connect();
+        let foods=await pool.request().query(`exec sp_monancuacuahang '${req.session.partner[0].DT_MA}','${req.session.store[0].CH_MA}'`);
+        foods_of_store=foods.recordset;
+        return res.render('./partner/Menu.ejs',{
+            dataFoodsofStore:foods_of_store
+        });
+    }
+    else{
+        return res.redirect('/accb_food.vn/doitac');
+    }
 }
 //
 let getAddFoodDT = async (req, res) => {

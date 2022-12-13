@@ -1637,36 +1637,6 @@ begin tran
 commit tran
 go
 
-create 
---drop
-proc sp_monancuacuahangdoitac
-@ma_dt char(10), @ma_ch char(10)
-as
-begin tran
-	begin try
-		if(not exists(select * from DOITAC where DT_MA=@ma_dt))
-		begin
-			raiserror('ma doi tac la null', 16, 1)
-			rollback tran
-			return
-		end
-		if(not exists(select * from CUAHANG where CH_MA=@ma_ch))
-		begin
-			raiserror('ma cua hang la null', 16, 1)
-			rollback tran
-			return
-		end
-	select * from MONAN where CH_MA=@ma_ch
-	end try
-	begin catch
-		raiserror('khong hien thi duoc thong tin chi nhanh', 16, 1)
-		rollback tran
-		return
-	end catch
-commit tran
-go
-
-
 --theo doi don hang theo trang thai
 create 
 --alter
@@ -2191,6 +2161,7 @@ go
 insert into DIACHI values('11','1','101',N'Cao Bằng','abc','bcd');
 insert into DIACHI values('70','51','501',N'Tây Ninh','efg','abs');
 insert into DIACHI values('59','81','1001',N'TP. Hồ Chí Minh','ekj','lop');
+insert into DIACHI values('12','D1','1',N'Tây Ninh','Châu Thành','Thị Trấn');
 
 select * from DIACHI
 
@@ -2229,6 +2200,7 @@ insert into KHACHHANG values('KH_4', N'Nguyễn E','0395639614','abc4@gmail',N'N
 
 insert into DOITAC values('DT_1',N'Nguyễn Văn F','0395639615','ab5c@gmail.com');
 insert into DOITAC values('DT_2',N'Nguyễn Văn G','0395639616','abc6@gmail.com');
+insert into DOITAC values('DT_3',N'Nguyễn Văn Y','0395639689','abc09@gmail.com');
 
 insert into NHANVIEN values('NV_1',N'Nguyễn Văn H','2002-01-11','5809237594','0395639617',N'Nam','abc7@gmail.com','11','1','101');
 insert into NHANVIEN values('NV_2',N'Nguyễn Văn J','2002-02-22','5809345367','0395639618',N'Nam','abc8@gmail.com','70','51','501');
@@ -2237,11 +2209,15 @@ insert into TAIXE values('TX_1',N'Nguyễn K','134804358','0395639619','j29-4565
 insert into TAIXE values('TX_2',N'Nguyễn L','134809135','0395639620','j29-3479','1458947598',N'Agribank',N'Nam','59','81','1001');
 
 insert into CUAHANG values('CH_1','DT_1','Hambu đê','05:59:59','23:59:59','1999999990',NULL);
-insert into CUAHANG values('CH_4','DT_1','Hambu đê','05:59:59','23:59:59','1999999990',NULL);
+insert into CUAHANG values('CH_4','DT_2','Hambu đê','05:59:59','23:59:59','1999999990',NULL);
 insert into CUAHANG values('CH_5','DT_2','Pizza đê','05:59:59','23:59:59','1989898989',NULL);
+
 
 insert into CHINHANH values('CN_3','CH_1','59','81','1001',N'Chi Nhánh Tây Ninh');
 insert into CHINHANH values('CN_2','CH_4','70','51','501',N'Chi Nhánh TP Hồ Chí Minh');
+insert into CHINHANH values('CN_1','CH_4','59','81','1001',N'Chi Nhánh Tây Ninh');
+insert into CHINHANH values('CN_1','CH_1','11','1','101',N'Chi Nhánh Cao Bằng');
+insert into CHINHANH values('CN_2','CH_1','70','51','501',N'Chi Nhánh TP Hồ Chí Minh');
 
 insert into THUCDON values('TD_1','CN_3','CH_1',N'Menu Hambu');
 insert into THUCDON values('TD_2','CN_2','CH_4',N'Menu Pizza');
@@ -2320,3 +2296,152 @@ select * from GIOHANG where KH_MA='KH_1'
 exec sp_huyDonHang 'DH_2'
 exec sp_XemDanhSachDonHangCuaKhachHang 'KH_1'
 
+CREATE 
+--alter
+PROC sp_themMonAn 
+	@DT_MA CHAR(10),	
+    @TD_MA CHAR(10),
+    @CN_MA CHAR(10),
+    @CH_MA CHAR(10),
+    @MAN_TEN NVARCHAR(100),
+    @MAN_MIEUTA NVARCHAR(100),
+    @MAN_TINHTRANG NVARCHAR(100),
+    @MAN_IMGPATH NVARCHAR(100),
+    @MAN_GIA MONEY
+AS
+BEGIN TRANSACTION
+	BEGIN TRY
+		IF (@TD_MA IS NULL OR @CN_MA IS NULL OR @CH_MA IS NULL OR @MAN_TEN IS NULL  OR @MAN_GIA IS NULL)
+		BEGIN 
+			PRINT N'thong tin dau vao khong hop le'
+			ROLLBACK
+			RETURN
+		END 
+		IF NOT EXISTS (SELECT * FROM dbo.CUAHANG WHERE CH_MA = @CH_MA AND DT_MA = @DT_MA)
+		BEGIN
+			PRINT N'sai ma cua hang'
+			ROLLBACK
+			RETURN
+		END
+
+		IF NOT EXISTS (SELECT * FROM dbo.THUCDON WHERE TD_MA = @TD_MA AND CN_MA = @CN_MA AND CH_MA = @CH_MA)
+		BEGIN
+			PRINT N'THONG TIN VE THUC DON KHONG DUNG'
+			ROLLBACK
+			RETURN
+		END
+
+		DECLARE @MAN_MA CHAR(10), @TMP INT
+		SELECT @TMP = COUNT(*) + 1 FROM dbo.MONAN
+		SET @MAN_MA = 'MN_' + CAST(@TMP AS CHAR(10));
+
+		INSERT INTO dbo.MONAN
+		(
+			MAN_MA,
+			TD_MA,
+			CN_MA,
+			CH_MA,
+			MAN_TEN,
+			MAN_MIEUTA,
+			MAN_TINHTRANG,
+			MAN_IMGPATH,
+			MAN_GIA
+		)
+		VALUES
+		(   @MAN_MA,   -- MAN_MA - char(10)
+			@TD_MA,   -- TD_MA - char(10)
+			@CN_MA,   -- CN_MA - char(10)
+			@CH_MA,   -- CH_MA - char(10)
+			@MAN_TEN, -- MAN_TEN - nvarchar(100)
+			@MAN_MIEUTA, -- MAN_MIEUTA - nvarchar(100)
+			@MAN_TINHTRANG, -- MAN_TINHTRANG - nvarchar(100)
+			@MAN_IMGPATH, -- MAN_IMGPATH - nvarchar(100)
+			@MAN_GIA  -- MAN_GIA - money
+			)
+        
+	END TRY
+	BEGIN CATCH
+		PRINT N'LOI CHEN'
+		ROLLBACK
+		RETURN
+	END CATCH
+COMMIT TRANSACTION
+GO
+
+EXEC dbo.sp_themMonAn @DT_MA = 'DT_1',          -- char(10)
+                      @TD_MA = 'TD_2',          -- char(10)
+                      @CN_MA = 'CN_2',          -- char(10)
+                      @CH_MA = 'CH_4',          -- char(10)
+                      @MAN_TEN = N'BANH TRANG NUONG',       -- nvarchar(100)
+                      @MAN_MIEUTA = N'NGON VAI',    -- nvarchar(100)
+                      @MAN_TINHTRANG = N'Có bán', -- nvarchar(100)
+                      @MAN_IMGPATH = NULL,   -- nvarchar(100)
+                      @MAN_GIA = 100000       -- money
+
+
+go
+create 
+--drop
+proc sp_chinhanhcuadoitac
+@ma_dt char(10),@ma_ch char(10)
+as
+begin transaction
+BEGIN TRY
+		IF (not exists(select * from DOITAC where DT_MA=@ma_dt))
+		BEGIN 
+			PRINT N'thong tin dau vao khong hop le'
+			ROLLBACK
+			RETURN
+		END 	
+		IF (not exists(select * from CUAHANG where DT_MA=@ma_dt and CH_MA=@ma_ch))
+		BEGIN 
+			PRINT N'thong tin dau vao khong hop le'
+			ROLLBACK
+			RETURN
+		END 	
+		select * from CHINHANH where CH_MA=@ma_ch	
+	END TRY
+	BEGIN CATCH
+		PRINT N'loi'
+		ROLLBACK
+		RETURN
+	END CATCH
+COMMIT TRANSACTION
+GO
+
+create 
+--drop
+proc sp_monancuacuahang
+@ma_dt char(10),@ma_ch char(10)
+as
+begin transaction
+BEGIN TRY
+		IF (not exists(select * from DOITAC where DT_MA=@ma_dt))
+		BEGIN 
+			PRINT N'thong tin dau vao khong hop le'
+			ROLLBACK
+			RETURN
+		END 	
+		IF (not exists(select * from CUAHANG where DT_MA=@ma_dt and CH_MA=@ma_ch))
+		BEGIN 
+			PRINT N'thong tin dau vao khong hop le'
+			ROLLBACK
+			RETURN
+		END 	
+		select * from MONAN where CH_MA=@ma_ch	
+	END TRY
+	BEGIN CATCH
+		PRINT N'loi'
+		ROLLBACK
+		RETURN
+	END CATCH
+COMMIT TRANSACTION
+GO
+
+
+select * from MONAN
+select * from THUCDON
+
+exec sp_monancuacuahang 'DT_1','CH_1'
+
+exec sp_monancuacuahangdoitac 'DT_1','CH_1'
