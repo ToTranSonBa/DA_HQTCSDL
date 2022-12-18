@@ -96,6 +96,35 @@ input {
 
 }
 
+.in_out {
+    display: flex;
+    flex-direction: row;
+    margin: 0 1em;
+    justify-content: space-around;
+    align-self: center;
+    width: 10em;
+    font-family: 'Poppins', sans-serif;
+}
+
+.in_out button {
+    background-color: var(--blue_white);
+    padding: 0.5em;
+    border-radius: 20px;
+    font-size: 0.8em;
+    font-weight: 500;
+}
+
+.in_out button:hover {
+    opacity: 0.7;
+    cursor: pointer;
+}
+
+.in_out button:first-child {
+    background-color: var(--purple);
+    color: var(--blue);
+    box-shadow: 2px 2px 4px var(--blue);
+}
+
 .Nav-Subnav {
     display: flex;
     flex-direction: row;
