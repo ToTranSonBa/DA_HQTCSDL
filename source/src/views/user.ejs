@@ -65,22 +65,21 @@
         </nav>
     </section>
 
-    <% if(dataFoods){ %>
     <section>
-
-        <% for(let i=0;i<1;i++){ %>
-            <div class="slide">
-                <img src="/images/pic/Slide 1.png" alt="">
-                <div class="left_slide">
-                    <span><%=dataFoods[i].MAN_TEN %></span>
-                    <span>Quench the Hunger</span>
-                    <span><%= dataFoods[i].MAN_MIEUTA %></span>
-                    <form action="/accb_food.vn/cart">
-                        <button>Order now!</button>
-                    </form>
+        <% if(dataFoods){ %>
+            <% for(let i=0;i<1;i++){ %>
+                <div class="slide">
+                    <img src="/images/pic/Slide 1.png" alt="">
+                    <div class="left_slide">
+                        <span><%=dataFoods[i].MAN_TEN %></span>
+                        <span>Quench the Hunger</span>
+                        <span><%= dataFoods[i].MAN_MIEUTA %></span>
+                        <form action="/accb_food.vn/cart">
+                            <button>Order now!</button>
+                        </form>
+                    </div>
                 </div>
-            </div>
-        <% } %>
+            <% } %>
         
         <% }else{ %>
             <span>Không có món ăn nào</span>
@@ -192,7 +191,7 @@
                     <div class="tag_comment">
                         <div class="top_tag_comment">
                             <div class="left_top_tag_comment">
-                                <img src="/images/pic/pic-2.png" alt="This is avatar">
+                                <img src="/images/pic/pic-1.png" alt="This is avatar">
                                 <div class="middel_top">
                                     <span class="name_cus">
                                         Hoang Van Cau
@@ -220,10 +219,10 @@
                     <div class="tag_comment">
                         <div class="top_tag_comment">
                             <div class="left_top_tag_comment">
-                                <img src="/images/pic/pic-2.png" alt="This is avatar">
+                                <img src="/images/pic/pic-3.png" alt="This is avatar">
                                 <div class="middel_top">
                                     <span class="name_cus">
-                                        Hoang Van Cau
+                                        Nguyễn Đình Cường
                                     </span>
                                     <div class="stars">
                                         <i class="fa-regular fa-star"></i>
@@ -264,7 +263,7 @@
             </div>
             <div class="bottom_about_us">
                 <div class="left_bottom">
-                    <img src="/images/foods/about-img.png" alt="">
+                    <img src="/images/pic/about-img.png" alt="">
                 </div>
                 <div class="right_bottom">
                     <span>Best Food In The Country</span>

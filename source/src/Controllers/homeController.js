@@ -1041,12 +1041,6 @@ let getPartnerspageAdmin = async (req, res) => {
 let getUserProfilepageAdmin = async (req, res) => {
     return res.render('./admin/UserInfo.ejs');
 }
-//Test============================================================================================================================================================================================
-
-let getTest = (req, res) => {
-    return res.render('asadsadsad');
-}
-
 //
 module.exports = {
     getHomepage,
@@ -1098,7 +1092,6 @@ module.exports = {
     getPartnerspageAdmin,
     getUserProfilepageAdmin,
     createNewUser,
-    getTest,
     getProcessAddFoodDT,
     getEditShoppageDT,
     getProcessCancelOrderpageDT,
