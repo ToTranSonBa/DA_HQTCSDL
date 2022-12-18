@@ -30,10 +30,6 @@
           </li>
 
           <li class="Navbar-Directory-item">
-            <a href="/accb_food.vn/doitac/menu" id="GFG">Menu</a>
-          </li>
-
-          <li class="Navbar-Directory-item">
             <a href="/accb_food.vn/doitac/shop" id="GFG">Shop</a>
           </li>
           
@@ -41,9 +37,11 @@
             <a href="/accb_food.vn/doitac/orders" id="GFG">Order</a>
           </li>
 
+          <!--
           <li class="Navbar-Directory-item">
-           <a href="/accb_food.vn/doitac/part_contracts" id="GFG">Contract</a>
+            <a href="/accb_food.vn/doitac/part_contracts" id="GFG">Contract</a>
           </li>
+          -->
           
           <li class="Navbar-Directory-item">About us</li>
         </ul>
@@ -85,54 +83,6 @@
         </div>
       </div>
     </section>
-
-    <section>
-      <div class="menu">
-        <div class="menu_top_dishes">
-          <button>
-            <i class="fa-solid fa-circle"></i>
-            <i class="fa-solid fa-circle"></i>
-            <i class="fa-solid fa-circle"></i>
-          </button>
-          <span>Our Menu</span>
-          <span>TODAY’S SPECIALITY</span>
-        </div>
-        <div class="menu_list_dishes">
-
-           <% for(let i =0; i<dataFoods.length ;i++){ %>
-            <div class="menu_tag_dishes">
-              <div class="menu_top_tag_dishes">
-                <div class="menu_detail_icon">
-                  <i class="fa-regular fa-eye"></i>
-                </div>
-                <div class="menu_detail_icon">
-                  <i class="fa-solid fa-xmark"></i>
-                </div>
-              </div>
-              <img src="<%= dataFoods[i].MAN_IMGPATH %>" alt="" width="200px" height="150px">
-              <div class="menu_bottom_tag_dishes">
-                <div class="menu_details">
-                  <span class="menu_name_food"> <%=dataFoods[i].MAN_TEN%> </span>
-                  <span>
-                    <%=dataFoods[i].MAN_MIEUTA%>
-                  </span>
-                </div>
-                <div class="btn_bottom">
-                  <button>
-                    <i class="fa-solid fa-minus"></i>
-                  </button>
-                  <span class="price">$ <span><%=dataFoods[i].MAN_GIA%></span></span>
-                  <button>
-                    <i class="fa-solid fa-plus"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-          <%}%>
-        </div>
-      </div>
-    </section>
-
     <section>
       <div class="branch">
         <div class="branch_top">

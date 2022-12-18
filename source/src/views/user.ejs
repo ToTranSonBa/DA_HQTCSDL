@@ -25,10 +25,11 @@
         <nav class="Navbar">
             <img id="logo" src="/images/pic/logo.png" alt="this is logo">
             <ul class="Navbar-Directory">
-                <li class="Navbar-Directory-item">Home</li>
+                <li class="Navbar-Directory-item">
+                    <a href="/accb_food.vn" underline="none">Home</a>
+                </li>
                 <li class="Navbar-Directory-item">Dishes</li>
                 <li class="Navbar-Directory-item">Review</li>
-                <li class="Navbar-Directory-item">About us</li>
             </ul>
             <div class="Navbar-Search">
                 <input class="Navbar-Search-input" type="search" placeholder="Search">
@@ -52,6 +53,13 @@
                     <a href="/accb_food.vn/profile">
                         <i class="fa-regular fa-user"></i>
                     </a>
+                </div>
+                <div class="Nav-Subnav-love">
+                    <form action="/process_sign_out">
+                        <button>
+                          <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                        </button>
+                      </form>
                 </div>
             </div>
         </nav>
@@ -99,13 +107,17 @@
                     <div class="tag_dishes">
                         <div class="top_tag_dishes">
                             <div class="detail_icon">
-                                <i class="fa-regular fa-eye"></i>
+                                <form action="/accb_food.vn/food_detail/id/<%=dataFoods[i].MAN_MA %>" method="get">
+                                    <button>
+                                        <i class="fa-regular fa-eye"></i>
+                                    </button>
+                                </form>
                             </div>
                             <div class="detail_icon">
                                 <i class="fa-regular fa-heart"></i>
                             </div>
                         </div>
-                        <img src="<%= dataFoods[i].MAN_IMGPATH %>" alt="" width="200px" height="150px">
+                        <img src="<%=dataFoods[i].MAN_IMGPATH %>" alt="" width="200px" height="150px">
                         <div class="bottom_tag_dishes">
                             <div class="details">
                                 <span class="name_food">

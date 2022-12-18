@@ -30,10 +30,6 @@
                 <li class="Navbar-Directory-item">
                   <a href="/accb_food.vn/doitac" id="GFG">Home</a>
                 </li>
-                
-                <li class="Navbar-Directory-item">
-                    <a href="/accb_food.vn/doitac/menu" id="GFG">Menu</a>
-                  </li>
 
                 <li class="Navbar-Directory-item">
                   <a href="/accb_food.vn/doitac/shop" id="GFG">Shop</a>
@@ -47,9 +43,11 @@
                   <a href="/accb_food.vn/doitac/orders" id="GFG">Order</a>
                 </li>
       
-                <li class="Navbar-Directory-item">
-                 <a href="/accb_food.vn/doitac/part_contracts" id="GFG">Contract</a>
-                </li>
+                <!--
+          <li class="Navbar-Directory-item">
+            <a href="/accb_food.vn/doitac/part_contracts" id="GFG">Contract</a>
+          </li>
+          -->
                 
                 <li class="Navbar-Directory-item">About us</li>
               </ul>
@@ -75,44 +73,13 @@
     </section>
 
     <div class="go_back">
-        <button type="submit">
-            <i class="fa-solid fa-arrow-left"></i>
-            Branch
-        </button>
+        <form action="/accb_food.vn/doitac">
+            <button type="submit">
+                <i class="fa-solid fa-arrow-left"></i>
+                Home
+            </button>
+        </form>
     </div>
-
-    <section>
-        <div class="info">
-            <div class="tag_info">
-                <div class="top_tag-info">
-                    <img src="/images/foods/home-img-3.png" alt="">
-                </div>
-                <div class="bottom_top_container">
-                    <div class="info">
-                        <label for="">Name Branch</label>
-                        <span>ACCB Food</span>
-                    </div>
-                    <div class="info">
-                        <label for="">Branch Address</label>
-                        <span>KTX khu B, DHQG TP.HCM</span>
-                    </div>
-                    <div class="info">
-                        <label for="">Number Of Orders/Day</label>
-                        <span>500</span>
-                    </div>
-                    <div class="info">
-                        <label for="">Operating Status</label>
-                        <span>Openning</span>
-                    </div>
-                    <div class="info">
-                        <label for="">Uptime</label>
-                        <span>9am to 18pm</span>
-                    </div>
-                    <button>Edit</button>
-                </div>
-            </div>
-        </div>
-    </section>
     <section>
         <div class="shopping_cart">
             <div class="top_cart">
@@ -122,57 +89,51 @@
                     </span>
                     <span>TODAY’S SPECIALITY</span>
                 </div>
-                <div class="list_dishes">
-                    <div class="tag_dishes">
-                        <div class="top_tag_dishes">
-                            <div class="detail_icon">
-                                <i class="fa-regular fa-eye"></i>
-                            </div>
-                            <div class="detail_icon">
-                                <i class="fa-solid fa-xmark"></i>
-                            </div>
-                        </div>
-                        <img src="/images/foods/dish-1.png" alt="">
-                        <div class="bottom_tag_dishes">
-                            <div class="stars">
-                                <div>
-                                    <i class="fa-regular fa-star"></i>
-                                    <i class="fa-regular fa-star"></i>
-                                    <i class="fa-regular fa-star"></i>
-                                    <i class="fa-regular fa-star"></i>
-                                    <i class="fa-regular fa-star"></i>
+                <div class="list_dishes"> 
+                    <% if(dataFoodsofBranch.lenght!=0){ %>
+                        <% for(let i=0; i<dataFoodsofBranch.length; i++){ %>
+                            <div class="tag_dishes">
+                                <div class="top_tag_dishes">
+                                    <div class="detail_icon">
+                                        <i class="fa-regular fa-eye"></i>
+                                    </div>
+                                    <div class="detail_icon">
+                                        <form action="/accb_food.vn/doitac/branch/xoamonan/id_mn/<%=dataFoodsofBranch[i].MAN_MA%>" method="post">
+                                            <input type="hidden" value="<%=dataBranch[0].CN_MA%>" name="MA_CN">
+                                            <button>
+                                                <i class="fa-solid fa-xmark"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                                <img src="<%=dataFoodsofBranch[i].MAN_IMGPATH%>" alt="">
+                                <div class="bottom_tag_dishes">
+                                    <div class="details">
+                                        <span class="name_food">
+                                            <%=dataFoodsofBranch[i].MAN_TEN%>
+                                        </span>
+                                        <span>
+                                            <%=dataFoodsofBranch[i].MAN_MIEUTA%>
+                                        </span>
+                                    </div>
+                                    <div class="btn_bottom">
+                                        
+                                        <span class="price">$
+                                            <input type="number" value="<%=dataFoodsofBranch[i].MAN_GIA%>">
+                                            </input>
+                                        </span>
+                                        
+                                    </div>
                                 </div>
                             </div>
-                            <div class="details">
-                                <span class="name_food">
-                                    Delicious Food
-                                </span>
-                                <span>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Impedit voluptatibus
-                                    veritatis nisi atque magnam amet ducimus dicta neque ad, non placeat quos. Cum id
-                                    nisi
-                                    repellendus consequatur voluptate, commodi reprehenderit!
-                                </span>
-                            </div>
-                            <div class="btn_bottom">
-                                <button>
-                                    <i class="fa-solid fa-minus"></i>
-                                </button>
-                                <span class="price">$
-                                    <input type="number" value="15.99">
-                                    </input>
-                                </span>
-                                <button>
-                                    <i class="fa-solid fa-plus"></i>
-                                </button>
-                            </div>
-                        </div>
-
-                    </div>
-
+                        <% } %> 
+                    <% } %>
                     <div class="add_dishes">
-                        <button>
-                            <i class="fa-solid fa-plus"></i>
-                        </button>
+                        <form action="/accb_food.vn/doitac/add_food/id/<%=dataBranch[0].CN_MA%>">
+                            <button style="cursor: pointer;">
+                                <i class="fa-solid fa-plus" ></i>
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>

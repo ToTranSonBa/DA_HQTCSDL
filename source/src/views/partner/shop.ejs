@@ -30,10 +30,6 @@
           </li>
 
           <li class="Navbar-Directory-item">
-            <a href="/accb_food.vn/doitac/menu" id="GFG">Menu</a>
-          </li>
-
-          <li class="Navbar-Directory-item">
             <a href="/accb_food.vn/doitac/shop" id="GFG">Shop</a>
           </li>
 
@@ -41,9 +37,11 @@
             <a href="/accb_food.vn/doitac/orders" id="GFG">Order</a>
           </li>
 
+          <!--
           <li class="Navbar-Directory-item">
             <a href="/accb_food.vn/doitac/part_contracts" id="GFG">Contract</a>
           </li>
+          -->
 
           <li class="Navbar-Directory-item">About us</li>
         </ul>
@@ -82,69 +80,44 @@
     </section>
 
     <section>
-      <div class="top">
-        <div class="top_top">
-          <span>Our Shope</span>
-          <span>ACCB FOOD Inc</span>
-        </div>
-
-        <div class="bottom_top">
-          <div class="bottom_top-Title">
-            <div class="top_title">
-              <span>My shop</span>
-              <span>Manage profile information for account security</span>
-            </div>
-            <div class="bottom_top_container">
-              <div class="info">
-                <label for="">Email</label>
-                <input placeholder="work@email"></input>
+      <form action="/accb_food.vn/doitac/edit_shop" method="POST">
+        <div class="top">
+          <div class="top_top">
+            <span>Our Shope</span>
+            <span>ACCB FOOD Inc</span>
+          </div>
+          <div class="bottom_top">
+            <div class="bottom_top-Title">
+              <div class="top_title">
+                <span>My shop</span>
+                <span>Manage profile information for account security</span>
               </div>
-              <div class="info">
-                <label for="">Shop name</label>
-                <input>ACCB Food</input>
-              </div>
-              <div class="info">
-                <label for="">Representatives</label>
-                <input>Hoang Van Cau</input>
-              </div>
-              <div class="info">
-                <label for="">City</label>
-                <input>TP.HCM</input>
-              </div>
-              <div class="info">
-                <label for="">County</label>
-                <input>VietNam</input>
-              </div>
-              <div class="info">
-                <label for="">Number Of Branches</label>
-                <input>3</input>
-              </div>
-              <div class="info">
-                <label for="">Number Of Orders/Day</label>
-                <input>500</input>
-              </div>
-              <div class="info">
-                <label for="">Type Of Cuisine</label>
-                <input>Noodle</input>
-              </div>
-              <div class="info">
-                <label for="">Business Address</label>
-                <input>KTX khu B, DHQG TP.HCM</input>
-              </div>
-              <div class="info">
-                <label for="">Phone Number</label>
-                <input>0123456789</input>
-              </div>
-              <div class="info">
-                <label for="">Operating Status</label>
-                <input>Opening</input>
-              </div>
-
-              <button>Edit</button>
+                <div class="bottom_top_container">
+                  <div class="info">
+                    <label for="">Email</label>
+                    <span>accb_food@gmail.com</span>
+                  </div>
+    
+                  <div class="info">
+                    <label for="">Shop name</label>
+                    <input value="<%=dataStore[0].CH_TEN%>" name="name"></input>
+                  </div>
+      
+                  <div class="info">
+                    <label for="">Phone Number</label>
+                    <input value="<%=dataStore[0].CH_SDT%>" name="number_phone"></input>
+                  </div>
+                  <div class="info">
+                    <label for="">Operating Status</label>
+                    <input value="<%=dataStore[0].CH_TINHTRANGHOATDONG%>" name="tinhtrang"></input>
+                  </div>
+    
+                  <button>Edit</button>
+                </div>
             </div>
           </div>
         </div>
-      </div>
+      </form>
     </section>
 
     <section>

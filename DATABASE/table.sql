@@ -1280,50 +1280,33 @@ GO
 --Thêm thông tin tài xế
 create 
 --ALTER
+--drop
 PROC sp_themthongtintaixe
-@ten nvarchar(10),
-@cmnd char(20),
-@sdt char(10),
-@bien_so_xe char(10),
-@stk char(20),
-@ngan_hang nvarchar(100),
-@gioi_tinh nvarchar(10),
-@ma_tinh CHAR(10),
-@ma_huyen CHAR(10) ,
-@ma_xa CHAR(10) 
-as
-begin transaction
-	BEGIN TRY 
-		if(@sdt = NULL or @ten = NULL or @cmnd = NULL or @bien_so_xe = NULL)
-		begin
-			print N'Không được để trống các thông tin quan trọng'
-			rollback transaction
-			return
-		end
-		if not exists (select * from DIACHI where DC_MATINH = @ma_tinh)
-		begin 
-			print N'mã tỉnh không tồn tại'
-			rollback tran
-			return
-		end
-		if not exists (select * from DIACHI where DC_MAHUYEN = @ma_huyen)
-		begin 
-			print N'mã huyện không tồn tại'
-			rollback tran
-			return
-		end
-		if not exists (select * from DIACHI where DC_MAXA = @ma_xa)
-		begin 
-			print N'mã xã  không tồn tại'
-			rollback tran
-			return
-		end
+	@ten nvarchar(10),
+	@cmnd char(20),
+	@sdt char(10),
+	@bien_so_xe char(10),
+	@stk char(20),
+	@ngan_hang nvarchar(100),
+	@gioi_tinh nvarchar(10),
+	@ma_tinh CHAR(10),
+	@ma_huyen CHAR(10) ,
+	@ma_xa CHAR(10) 
+AS
+BEGIN TRANSACTION
+	BEGIN TRY
+		IF (@sdt is NULL and @ten is NULL and @cmnd is NULL and @bien_so_xe is NULL)
+		BEGIN
+			PRINT N'LOI DAU VAO'
+			ROLLBACK
+			RETURN
+		END
+		
 		--Insert
 		DECLARE @MATX CHAR(10), @TMP INT
 		SELECT @TMP = COUNT(*) + 1 FROM dbo.TAIXE
 		SET @MATX = 'TX_'+CAST(@TMP AS CHAR(20))
-		insert into TAIXE values(@MATX, @ten, @cmnd, @sdt, @bien_so_xe, @stk, @ngan_hang,@gioi_tinh,@ma_tinh,@ma_huyen,@ma_xa)
-		print 'Thêm thành công'
+		insert into TAIXE(TX_MA,TX_TEN,TX_CMND,TX_SDT,TX_BIENSOXE,TX_STK,TX_NGANHANG,TX_GIOITINH,DC_MATINH,DC_MAHUYEN,DC_MAXA) values(@MATX, @ten, @cmnd, @sdt, @bien_so_xe, @stk, @ngan_hang,@gioi_tinh,@ma_tinh,@ma_huyen,@ma_xa)
 	END TRY
 	BEGIN CATCH 
 		PRINT N'LOI INSERT'
@@ -1370,11 +1353,7 @@ create proc sp_capnhatthongtintaixe
 @sdt char(10),
 @bien_so_xe char(20),
 @stk char(20),
-@ngan_hang nvarchar(100),
-@gioi_tinh nvarchar(10),
-@ma_tinh CHAR(10),
-@ma_huyen CHAR(10),
-@ma_xa CHAR(10)
+@gioi_tinh nvarchar(10)
 as
 begin transaction
 	BEGIN TRY
@@ -1390,24 +1369,6 @@ begin transaction
 			rollback transaction
 			return
 		end
-		if not exists (select * from DIACHI where DC_MATINH = @ma_tinh)
-		begin 
-			print N'mã tỉnh không tồn tại'
-			rollback tran
-			return
-		end
-		if not exists (select * from DIACHI where DC_MAHUYEN = @ma_huyen)
-		begin 
-			print N'mã huyện không tồn tại'
-			rollback tran
-			return
-		end
-		if not exists (select * from DIACHI where DC_MAXA = @ma_xa)
-		begin 
-			print N'mã xã không tồn tại'
-			rollback tran
-			return
-		end
 		--Update
 		update TAIXE set
 		TX_TEN=@ten, 
@@ -1415,11 +1376,7 @@ begin transaction
 		TX_SDT=@sdt, 
 		TX_BIENSOXE=@bien_so_xe, 
 		TX_STK=@stk, 
-		TX_NGANHANG=@ngan_hang,
-		TX_GIOITINH=@gioi_tinh,
-		DC_MATINH=@ma_tinh,
-		DC_MAHUYEN=@ma_huyen,
-		DC_MAXA=@ma_xa
+		TX_GIOITINH=@gioi_tinh
 		WHERE TX_MA = @ma
 	END TRY
 	BEGIN CATCH
@@ -1429,97 +1386,8 @@ begin transaction
 commit transaction
 go
 
---Hiển thị ra danh sách đơn hàng chưa được nhận giao
-create proc sp_xemdanhsachdonhang
-as
-begin TRANSACTION
-	BEGIN TRY 
-		SELECT * from TINHTRANGGIAOHANG where TTGH_TINHTRANG=N'chưa xác nhận đơn hàng' and TX_MA=NULL
-	END TRY 
-	BEGIN CATCH
-		PRINT N'loi select'
-		ROLLBACK
-	END CATCH
-commit transaction
-GO
 
 
---Xử lý đơn đặt hàng 
-create proc sp_xulydonhang
-@ma_tx CHAR(10),
-@ma_dh CHAR(10),
-@tinhtrang nvarchar(50),
-@maxa CHAR(10),
-@mahuyen CHAR(10),
-@matinh CHAR(10)
-as
-begin transaction
-	BEGIN TRY
-		if(@ma_dh = NULL)
-		begin
-			print N'Không nhận được mã đơn hàng'
-			rollback transaction
-			return
-		end
-		if(@ma_tx = NULL)
-		begin
-			print N'Không nhận được mã tài xế'
-			rollback transaction
-			return
-		end
-		if(@tinhtrang = NULL )
-		begin
-			print N'Không được để trống'
-			rollback transaction
-			return
-		end
-		if not exists(select * from TINHTRANGGIAOHANG where DH_MA=@ma_dh)
-		begin
-			print N'Không có đơn hàng mã ' + @ma_dh 
-			rollback transaction
-			return
-		end
-		if exists(select * from TINHTRANGGIAOHANG where DH_MA=@ma_dh and TTGH_TINHTRANG=N'Đã nhận đơn hàng')
-		begin
-			print N'Mã đơn hàng ' + @ma_dh + N' đã nhận'
-			rollback transaction
-			return
-		end
-		if exists(select * from TINHTRANGGIAOHANG where DH_MA=@ma_dh and TX_MA<>@ma_tx  and TTGH_TINHTRANG=N'Đã nhận đơn hàng')
-		begin
-			print N'Mã đơn hàng ' + @ma_dh + N' đã có tài xế nhận'
-			rollback transaction
-			return
-		END
-        IF(@maxa = NULL OR @mahuyen = NULL OR @matinh = null)
-			BEGIN
-				PRINT N'Dia diem khong hop le'
-				ROLLBACK
-			END 
-		IF EXISTS (SELECT * FROM dbo.DIACHI WHERE DC_MATINH = @matinh AND DC_MAHUYEN = @mahuyen AND DC_MAXA = @maxa)
-			BEGIN
-				PRINT N'Dia diem khong ton tai'
-				ROLLBACK
-			END 
-		--Update tình trạng giao hàng
-		if(@tinhtrang = N'Đã nhận đơn hàng')
-		begin
-			update TINHTRANGGIAOHANG set TTGH_TINHTRANG=@tinhtrang, DC_MATINH = @matinh, DC_MAHUYEN = @mahuyen, DC_MAXA = @maxa
-			WHERE DH_MA = @ma_dh
-			UPDATE dbo.DONHANG SET TX_MA = @ma_tx  WHERE @ma_dh = DH_MA
-		end
-		else
-		begin
-			update TINHTRANGGIAOHANG set TX_MA=NULL , TTGH_TINHTRANG=N'chưa nhận đơn hàng'
-			
-		end
-	END TRY 
-	BEGIN CATCH 
-		PRINT N'Loi Update'
-		ROLLBACK
-	END CATCH
-commit transaction
-GO
 
 --Tiền đơn hàng tài xế nhận
 create proc sp_tiendonhangtaixenhan
@@ -2110,47 +1978,6 @@ begin transaction
 commit transaction
 go
 
---xu ly đăng ký
-create 
---alter
---drop
-proc pr_taoUSER
-	@user char(20),
-	@password char(10),
-	@loaitk CHAR(10)
-as
-begin transaction
-	begin try
-		-- user khac null
-		if(@user is null)
-		begin
-			RAISERROR('user khong hop le',16,1)
-			rollback transaction
-			return
-		end
-
-		-- password khac null
-		if(@password is null)
-		begin
-			RAISERROR('password khong hop le',16,1)
-			rollback transaction
-			return
-		end
-		declare @ma char(10)
-		if(@loaitk = 'KHACHHANG')
-		begin
-			select @ma = 'KH_' + cast((count(tk.MA)+1) as char(10)) from TAIKHOAN tk where tk.MA like'KH_%'
-		end
-		insert into TAIKHOAN values(@ma,@user,@password,@loaitk)
-
-	end try
-	begin catch 
-		RAISERROR('tao login that bai',16,1)
-		rollback transaction
-		return
-	end catch
-commit transaction
-go
 
 ----===========================================================================================================================================================
 
@@ -2225,7 +2052,7 @@ insert into THUCDON values('TD_2','CN_2','CH_4',N'Menu Pizza');
 insert into MONAN values('MN_1','TD_1','CN_3','CH_1',N'Hamburger Cá','abc',NULL,'/images/foods/dish-1.png',89999);
 insert into MONAN values('MN_2','TD_1','CN_3','CH_1',N'Hamburger Bò','efg',NULL,'/images/foods/menu-2.jpg',99999);
 insert into MONAN values('MN_3','TD_2','CN_2','CH_4',N'Pizza Thập Cẩm','ekj',NULL,'/images/foods/dish-4.png',199999);
-INSERT into MONAN values('MN_5','TD_2','CN_2','CH_4',N'Gà Nướng','ekj',NULL,'/images/foods/dish-3.png',99999);
+INSERT into MONAN values('MN_4','TD_2','CN_2','CH_4',N'Gà Nướng','ekj',NULL,'/images/foods/dish-3.png',99999);
 
 insert into TAIKHOAN values('KH_1','zp19d0z','1234','KHACHHANG');
 insert into TAIKHOAN values('KH_2','20120429','1234','KHACHHANG');
@@ -2446,12 +2273,48 @@ exec sp_monancuacuahang 'DT_1','CH_1'
 
 exec sp_monancuacuahangdoitac 'DT_1','CH_1'
 
+-- Món ăn của chi nhánh cửa hàng của đối tác
+create 
+--drop
+proc sp_monanchinhanhcuahang
+@ma_dt char(10),@ma_ch char(10),@ma_cn char(10)
+as
+begin transaction
+BEGIN TRY
+		IF (not exists(select * from DOITAC where DT_MA=@ma_dt))
+		BEGIN 
+			PRINT N'thong tin dau vao khong hop le'
+			ROLLBACK
+			RETURN
+		END 	
+		IF (not exists(select * from CUAHANG where DT_MA=@ma_dt and CH_MA=@ma_ch))
+		BEGIN 
+			PRINT N'thong tin dau vao khong hop le'
+			ROLLBACK
+			RETURN
+		END 
+		IF (not exists(select * from CHINHANH where CN_MA=@ma_cn and CH_MA=@ma_ch))
+		BEGIN 
+			PRINT N'thong tin dau vao khong hop le'
+			ROLLBACK
+			RETURN
+		END 	
+		select * from MONAN where CH_MA=@ma_ch and CN_MA=@ma_cn
+	END TRY
+	BEGIN CATCH
+		PRINT N'loi'
+		ROLLBACK
+		RETURN
+	END CATCH
+COMMIT TRANSACTION
+GO
+
 --=================================================================================================================================================================
 --=================================================================================================================================================================
 --=================================================================================================================================================================
 -- THEM MON AN
 CREATE 
---alter
+--drop
 PROC sp_themMonAn 
 	@DT_MA CHAR(10),	
     @TD_MA CHAR(10),
@@ -2459,7 +2322,6 @@ PROC sp_themMonAn
     @CH_MA CHAR(10),
     @MAN_TEN NVARCHAR(100),
     @MAN_MIEUTA NVARCHAR(100),
-    @MAN_TINHTRANG NVARCHAR(100),
     @MAN_IMGPATH NVARCHAR(100),
     @MAN_GIA MONEY
 AS
@@ -2497,7 +2359,6 @@ BEGIN TRANSACTION
 			CH_MA,
 			MAN_TEN,
 			MAN_MIEUTA,
-			MAN_TINHTRANG,
 			MAN_IMGPATH,
 			MAN_GIA
 		)
@@ -2508,7 +2369,6 @@ BEGIN TRANSACTION
 			@CH_MA,   -- CH_MA - char(10)
 			@MAN_TEN, -- MAN_TEN - nvarchar(100)
 			@MAN_MIEUTA, -- MAN_MIEUTA - nvarchar(100)
-			@MAN_TINHTRANG, -- MAN_TINHTRANG - nvarchar(100)
 			@MAN_IMGPATH, -- MAN_IMGPATH - nvarchar(100)
 			@MAN_GIA  -- MAN_GIA - money
 			)
@@ -2522,7 +2382,7 @@ BEGIN TRANSACTION
 COMMIT TRANSACTION
 GO
 
--- them ho so dang ky
+--THEM HO SO DANG Ky
 CREATE 
 --ALTER
 PROC sp_themHoSoDangKy
@@ -2605,6 +2465,7 @@ BEGIN TRANSACTION
 	END CATCH
 COMMIT TRANSACTION
 GO
+
 
 -- THEM CUA HANG
 CREATE 
@@ -2719,7 +2580,7 @@ BEGIN TRANSACTION
 COMMIT TRANSACTION
 GO
 
--- THEM THUC DON
+--Thêm thực đơn
 CREATE 
 --ALTER
 PROC sp_themThucDon 
@@ -2768,13 +2629,11 @@ GO
 
 -- UPDATE CUA HANG
 CREATE 
---alter
+--drop
 PROC sp_updateCuaHang
 	@DT_MA CHAR(10),
 	@CH_MA CHAR(10),
     @CH_TEN CHAR(100),
-    @CH_TGMOCUA TIME,
-    @CH_TGDONGCUA TIME,
     @CH_SDT CHAR(10),
     @CH_TINHTRANGHOATDONG NVARCHAR(100)
 AS
@@ -2794,8 +2653,7 @@ BEGIN TRANSACTION
 
 		UPDATE dbo.CUAHANG SET
 		CH_TEN = @CH_TEN,
-		CH_TGMOCUA = @CH_TGMOCUA,
-		CH_TGDONGCUA = @CH_TGDONGCUA,
+		CH_SDT=@CH_SDT,
 		CH_TINHTRANGHOATDONG = @CH_TINHTRANGHOATDONG
 		WHERE DT_MA = @DT_MA AND CH_MA = @CH_MA
 		
@@ -2804,49 +2662,6 @@ BEGIN TRANSACTION
 		PRINT N'LOI CHEN'
 		ROLLBACK 
 		RETURN
-	END CATCH
-COMMIT TRANSACTION
-GO
-
--- UPDATE CHI NHANH
-CREATE 
---ALTER
-PROC sp_updateChiNhanh
-	@CN_MA CHAR(10),
-	@DT_MA CHAR(10),
-    @CH_MA CHAR(10),
-    @DC_MATINH CHAR(10),
-    @DC_MAHUYEN CHAR(10),
-    @DC_MAXA CHAR(10),
-    @CN_TEN NVARCHAR(100)
-AS 
-BEGIN TRANSACTION
-	BEGIN TRY
-		IF (@CH_MA IS NULL AND @CN_TEN IS NULL AND @DC_MATINH IS NULL AND @DC_MAHUYEN IS NULL AND @DC_MAXA IS NULL)
-		BEGIN
-		    PRINT 'THONG TIN DAU VAO LOI'
-			ROLLBACK
-			RETURN
-		END
-		IF NOT EXISTS (SELECT * FROM dbo.DIACHI WHERE DC_MATINH = @DC_MATINH AND
-						DC_MAHUYEN = @DC_MAHUYEN AND DC_MAXA = @DC_MAXA)
-		BEGIN
-			PRINT 'DIA CHI KHONG TON TAI'
-			ROLLBACK
-			RETURN
-		END 
-		UPDATE dbo.CHINHANH SET
-		CN_TEN = @CN_TEN,
-		DC_MAXA = @DC_MAXA,
-		DC_MAHUYEN = @DC_MAHUYEN,
-		DC_MATINH = @DC_MATINH
-		WHERE CN_MA = @CH_MA AND CH_MA = @CH_MA
-		    
-	END TRY
-	BEGIN CATCH
-		PRINT 'LOI UPDATE'
-		ROLLBACK
-		RETURN 
 	END CATCH
 COMMIT TRANSACTION
 GO
@@ -2885,3 +2700,174 @@ BEGIN TRANSACTION
 COMMIT TRANSACTION
 GO 
 
+--Update Chi Nhánh
+CREATE 
+--ALTER
+PROC sp_updateChiNhanh
+	@CN_MA CHAR(10),
+	@DT_MA CHAR(10),
+    @CH_MA CHAR(10),
+    @CN_TEN NVARCHAR(100)
+AS 
+BEGIN TRANSACTION
+	BEGIN TRY
+		IF (@CH_MA IS NULL AND @CN_TEN IS NULL )
+		BEGIN
+		    PRINT 'THONG TIN DAU VAO LOI'
+			ROLLBACK
+			RETURN
+		END
+		
+		UPDATE dbo.CHINHANH SET
+		CN_TEN = @CN_TEN
+		WHERE CN_MA = @CH_MA AND CH_MA = @CH_MA    
+	END TRY
+	BEGIN CATCH
+		PRINT 'LOI UPDATE'
+		ROLLBACK
+		RETURN 
+	END CATCH
+COMMIT TRANSACTION
+GO
+
+
+--NHẬN ĐƠN HÀNG
+create
+--drop
+proc sp_acceptOrder
+@TX_MA char(10),
+@DH_MA char(10),
+@TTGH_TINHTRANG nvarchar(50),
+@DC_MATINH char(10),
+@DC_MAHUYEN char(10),
+@DC_MAXA char(10)
+as
+BEGIN TRANSACTION
+	BEGIN TRY
+		IF (@TX_MA IS NULL AND @DH_MA IS NULL)
+		BEGIN
+		    PRINT N'THONG TIN KHONG HOP LE'
+			ROLLBACK
+			RETURN
+		END
+		IF (not exists(select* from DONHANG where DH_MA=@DH_MA))
+		BEGIN
+		    PRINT N'THONG TIN KHONG HOP LE'
+			ROLLBACK
+			RETURN
+		END
+		insert into TINHTRANGGIAOHANG(TX_MA,DH_MA,TTGH_TINHTRANG,DC_MATINH,DC_MAHUYEN,DC_MAXA) values(@TX_MA,@DH_MA,@TTGH_TINHTRANG,@DC_MATINH,@DC_MAHUYEN,@DC_MAXA)
+		update DONHANG set DH_TINHTRANG=N'Đang giao' where DH_MA=@DH_MA
+	END TRY
+	BEGIN CATCH
+		PRINT N'error!'
+		ROLLBACK
+		RETURN
+	END CATCH
+COMMIT TRANSACTION
+GO
+
+--xu ly đăng ký
+create 
+--alter
+--drop
+proc pr_taoUSER
+	@user char(20),
+	@password char(10),
+	@loaitk CHAR(10)
+as
+begin transaction
+	begin try
+		-- user khac null
+		if(@user is null)
+		begin
+			RAISERROR('user khong hop le',16,1)
+			rollback transaction
+			return
+		end
+
+		-- password khac null
+		if(@password is null)
+		begin
+			RAISERROR('password khong hop le',16,1)
+			rollback transaction
+			return
+		end
+		declare @ma char(10)
+		if(@loaitk = 'KHACHHANG')
+		begin
+			select @ma = 'KH_' + cast((count(tk.MA)+1) as char(10)) from TAIKHOAN tk where tk.MA like'KH_%'
+		end
+
+		if(@loaitk = 'TAIXE')
+		begin
+			select @ma = 'TX_' + cast((count(tk.MA)+1) as char(10)) from TAIKHOAN tk where tk.MA like'TX_%'
+		end
+		insert into TAIKHOAN values(@ma,@user,@password,@loaitk)
+	end try
+	begin catch 
+		RAISERROR('tao login that bai',16,1)
+		rollback transaction
+		return
+	end catch
+commit transaction
+go
+
+--DUYỆT HỒ SƠ ĐĂNG KÝ
+CREATE 
+--alter
+PROC sp_duyetHSDK 
+	@HSDK_MA CHAR(10),
+	@NV_MA CHAR(10)
+AS
+BEGIN TRANSACTION 
+	BEGIN TRY
+		IF NOT EXISTS(SELECT * FROM dbo.HOSODANGKY  WHERE  HSDK_MA = @HSDK_MA)
+		BEGIN
+		    ROLLBACK
+			RETURN
+		END 
+		IF NOT EXISTS(SELECT * FROM dbo.NHANVIEN WHERE NV_MA = @NV_MA)
+		BEGIN
+		    ROLLBACK
+			RETURN
+		END 
+		UPDATE dbo.HOSODANGKY
+		SET NV_MA = @NV_MA
+		WHERE HSDK_MA = @HSDK_MA
+
+	END TRY
+	BEGIN CATCH
+		ROLLBACK
+		RETURN
+	END CATCH
+COMMIT TRANSACTION
+GO
+
+create proc sp_CapNhatThongTinNhanVien
+	@manv CHAR(10),
+	@tennv nvarchar(100),
+	@mailnv char(10),
+	@gioitinhnv nvarchar(10),
+	@cmndnv char(20),
+	@sdtnv char(10)
+as
+begin tran
+	begin try
+		--mã khách hàng không tồn tại
+		if not exists (select * from NHANVIEN where  NV_MA = @manv)
+		begin 
+			print N'Thông tin sai'
+			rollback tran
+		end
+		update NHANVIEN
+		set NV_TEN = @tennv, NV_SDT = @sdtnv, NV_MAIL = @mailnv, NV_GIOITINH = @gioitinhnv,
+		NV_CMND=@cmndnv
+		where NV_MA = @manv
+	end try
+	begin catch
+		print N'lỗi hệ thống'
+		rollback tran
+	end catch
+commit tran
+GO 
