@@ -63,6 +63,7 @@ const initWebRoute = (app) => {
     router.get('/accb_food.vn/doitac/part_contracts', homeController.getPartContractspageDT);
     router.get('/accb_food.vn/doitac/renew_contract', homeController.getRenewContractpageDT);
     router.get('/accb_food.vn/doitac/shop', homeController.getShoppageDT);
+    router.post('/accb_food.vn/doitac/sign_upPartner', homeController.createrNewPartner)
 
     //Route of Driver=============================================================================================================================================================================
     router.get('/accb_food.vn/taixe', homeController.getHomepageDriver);
@@ -71,6 +72,7 @@ const initWebRoute = (app) => {
     router.get('/accb_food.vn/taixe/orders_detail', homeController.getOrdersDetailpageDriver);
     router.get('/accb_food.vn/taixe/sign_up', homeController.getSignUppageDriver);
     router.get('/accb_food.vn/taixe/wallet', homeController.getWalletpageDriver);
+    router.post('/accb_food.vn/taixe/sign_upDriver', homeController.createrNewDriver)
 
     //Route of Agent==============================================================================================================================================================================
     router.get('/accb_food.vn/nhanvien', homeController.getHomepageNhanvien);

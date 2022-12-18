@@ -404,13 +404,13 @@ let getHomepageDoitac = async (req, res) => {
             // Store
             let stores = await pool.request().query(`exec sp_dscuahangdoitac '${req.session.partner[0].DT_MA}'`);
             data_stores = stores.recordset;
-            req.session.store=data_stores
+            req.session.store = data_stores
             // Branch
             let branch = await pool.request().query(`exec sp_chinhanhcuadoitac '${req.session.partner[0].DT_MA}','${data_stores[0].CH_MA}'`);
-            data_branchs=branch.recordset;
+            data_branchs = branch.recordset;
             // Food
             let foods = await pool.request().query(`exec sp_monancuacuahang '${req.session.partner[0].DT_MA}','${data_stores[0].CH_MA}'`)
-            data_foods=foods.recordset;
+            data_foods = foods.recordset;
             //
             return res.render('./partner/Home.ejs', {
                 dataPartner: req.session.partner,
@@ -436,16 +436,16 @@ let getSignUpDT = async (req, res) => {
 }
 //
 let getMenupageDT = async (req, res) => {
-    if(req.session.partner&&req.session.store){
-        let foods_of_store=[];
+    if (req.session.partner && req.session.store) {
+        let foods_of_store = [];
         await pool.connect();
-        let foods=await pool.request().query(`exec sp_monancuacuahang '${req.session.partner[0].DT_MA}','${req.session.store[0].CH_MA}'`);
-        foods_of_store=foods.recordset;
-        return res.render('./partner/Menu.ejs',{
-            dataFoodsofStore:foods_of_store
+        let foods = await pool.request().query(`exec sp_monancuacuahang '${req.session.partner[0].DT_MA}','${req.session.store[0].CH_MA}'`);
+        foods_of_store = foods.recordset;
+        return res.render('./partner/Menu.ejs', {
+            dataFoodsofStore: foods_of_store
         });
     }
-    else{
+    else {
         return res.redirect('/accb_food.vn/doitac');
     }
 }
@@ -484,6 +484,23 @@ let getRenewContractpageDT = async (req, res) => {
 //
 let getShoppageDT = async (req, res) => {
     return res.render('./partner/shop.ejs');
+}
+//
+let createrNewPartner = async (req, res) => {
+    await pool.connect();
+    let mail = req.body.mail;
+    let shopname = req.body.shopName;
+    let representatives = req.body.representatives;
+    let city = req.body.city;
+    let county = req.body.county;
+    let branchesNumber = req.body.branchesNumber;
+    let NumberOrderPerDay = req.body.NumberOrderPerDay;
+    let cuisineType = req.body.cuisineType;
+    let phone = req.body.phone;
+    let password = req.body.password;
+    //console.log(`exec sp_themHoSoDangKy '${mail}',N'${shopname}',N'${city}',N'${county}',${branchesNumber},${NumberOrderPerDay},N'${cuisineType}',N'${representatives}','${phone}'`);
+    await pool.request().query(`exec sp_themHoSoDangKy '${mail}',N'${shopname}',N'${city}',N'${county}',${branchesNumber},${NumberOrderPerDay},N'${cuisineType}',N'${representatives}','${phone}'`)
+    return res.redirect('/accb_food.vn/doitac')
 }
 //Driver==========================================================================================================================================================================================
 let getHomepageDriver = async (req, res) => {
@@ -525,11 +542,35 @@ let getOrdersDetailpageDriver = async (req, res) => {
 }
 //
 let getSignUppageDriver = async (req, res) => {
-    return res.render('./driver/signup.ejs');
+    await pool.connect();
+    let data_conscious = [];
+    let conscious = await pool.request().query('select *  from DIACHI ');
+    data_conscious = conscious.recordset;
+    return res.render('./driver/signup.ejs', { dataConscious: data_conscious });
 }
 //
 let getWalletpageDriver = async (req, res) => {
     return res.render('./driver/Wallet.ejs');
+}
+//
+let createrNewDriver = async (req, res) => {
+    await pool.connect();
+    let name = req.body.name;
+    let sex = req.body.sex;
+    let email = req.body.email;
+    let phone = req.body.phone;
+    let MATINH = req.body.DC_MATINH.trim();
+    let MAHUYEN = req.body.DC_MAHUYEN.trim();
+    let MAXA = req.body.DC_MAXA.trim();
+    let id = req.body.id;
+    let licenseplate = req.body.licensePlate;
+    let bank = req.body.bank;
+    let banknumber = req.body.bankNumber;
+    let userName = req.body.userName;
+    let userPass = req.body.pass;
+    await pool.request().query(`exec sp_themthongtintaixe N'${name}','${id}','${phone}',N'${licenseplate}','${banknumber}','${bank}','${sex}','${MATINH}','${MAHUYEN}','${MAXA}'`);
+    await pool.request().query(`exec pr_taoUSER '${userName}','${userPass}','TAIXE'`);
+    return res.redirect('/');
 }
 //Agent===========================================================================================================================================================================================
 let getHomepageNhanvien = async (req, res) => {
@@ -717,5 +758,7 @@ module.exports = {
     getPartnerspageAdmin,
     getUserProfilepageAdmin,
     createNewUser,
+    createrNewPartner,
+    createrNewDriver,
     getTest
 }
