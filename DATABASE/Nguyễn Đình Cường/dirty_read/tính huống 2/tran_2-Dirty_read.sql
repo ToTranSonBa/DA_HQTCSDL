@@ -1,5 +1,7 @@
 USE DOAN_HQTCSDL
 GO 
-exec sp_DanSachMonAnKhachHangTimKiem 'KH_4',N'pizza'
+set transaction isolation level read uncommitted
 
 SELECT * FROM dbo.MONAN
+waitfor delay '0:0:10'
+select * from MONAN
